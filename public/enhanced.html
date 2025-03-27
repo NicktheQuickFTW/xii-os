@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennis Tiebreaker - Enhanced</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 {
+            color: #1a5276;
+        }
+        .section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #1a5276;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #154360;
+        }
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .team-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        .seed-box {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .seed-number {
+            background: #1a5276; 
+            color: white; 
+            width: 30px; 
+            height: 30px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 50%; 
+            margin-right: 10px;
+        }
+        .tiebreaker-info {
+            font-size: 0.85em;
+            color: #6c757d;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 15px;
+            margin-right: 5px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab.active {
+            background-color: #f8f9fa;
+            border-color: #ddd;
+            border-bottom-color: #f8f9fa;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <h1>Big 12 Tennis Tiebreaker</h1>
+    <p>Enhanced version - works with or without JavaScript</p>
+    
+    <div class="tabs">
+        <div class="tab active" data-tab="add-match">Add Matches</div>
+        <div class="tab" data-tab="standings">Standings</div>
+        <div class="tab" data-tab="match-history">Match History</div>
+        <div class="tab" data-tab="head-to-head">Head-to-Head</div>
+    </div>
+    
+    <!-- Add Match Tab -->
+    <div class="tab-content active" id="add-match">
+        <div class="section">
+            <h2>Add a Match</h2>
+            
+            <h3>Team 1</h3>
+            <div class="team-buttons">
+                <button type="button" onclick="setTeam('UCF', 'team1')">UCF</button>
+                <button type="button" onclick="setTeam('Texas Tech', 'team1')">Texas Tech</button>
+                <button type="button" onclick="setTeam('Oklahoma State', 'team1')">Oklahoma State</button>
+                <button type="button" onclick="setTeam('Baylor', 'team1')">Baylor</button>
+                <button type="button" onclick="setTeam('Arizona State', 'team1')">Arizona State</button>
+                <button type="button" onclick="setTeam('TCU', 'team1')">TCU</button>
+                <button type="button" onclick="setTeam('Arizona', 'team1')">Arizona</button>
+                <button type="button" onclick="setTeam('BYU', 'team1')">BYU</button>
+            </div>
+            
+            <h3>Team 2</h3>
+            <div class="team-buttons">
+                <button type="button" onclick="setTeam('UCF', 'team2')">UCF</button>
+                <button type="button" onclick="setTeam('Texas Tech', 'team2')">Texas Tech</button>
+                <button type="button" onclick="setTeam('Oklahoma State', 'team2')">Oklahoma State</button>
+                <button type="button" onclick="setTeam('Baylor', 'team2')">Baylor</button>
+                <button type="button" onclick="setTeam('Arizona State', 'team2')">Arizona State</button>
+                <button type="button" onclick="setTeam('TCU', 'team2')">TCU</button>
+                <button type="button" onclick="setTeam('Arizona', 'team2')">Arizona</button>
+                <button type="button" onclick="setTeam('BYU', 'team2')">BYU</button>
+            </div>
+            
+            <form id="match-form" action="/api/matches" method="post">
+                <div style="display: flex; gap: 20px;">
+                    <div style="flex: 1;">
+                        <label for="team1">Team 1</label>
+                        <input type="text" id="team1" name="team1" value="UCF" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="team2">Team 2</label>
+                        <input type="text" id="team2" name="team2" value="Texas Tech" required>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 20px;">
+                    <div style="flex: 1;">
+                        <label for="team1_score">Team 1 Score</label>
+                        <input type="number" id="team1_score" name="team1_score" value="4" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="team2_score">Team 2 Score</label>
+                        <input type="number" id="team2_score" name="team2_score" value="3" required>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="match_date" name="match_date" value="2025-03-27">
+                <input type="hidden" name="conference" value="Big 12">
+                
+                <button type="submit">Add Match</button>
+            </form>
+            
+            <div id="form-message"></div>
+            
+            <h3>Quick Add Matches</h3>
+            <div>
+                <button onclick="quickAddMatch('UCF', 'Texas Tech', 4, 3)">UCF 4-3 Texas Tech</button>
+                <button onclick="quickAddMatch('Baylor', 'Arizona State', 4, 2)">Baylor 4-2 Arizona State</button>
+                <button onclick="quickAddMatch('Arizona State', 'TCU', 4, 1)">Arizona State 4-1 TCU</button>
+                <button onclick="quickAddMatch('TCU', 'Baylor', 4, 3)">TCU 4-3 Baylor</button>
+                <button onclick="quickAddMatch('BYU', 'Kansas State', 4, 2)">BYU 4-2 Kansas State</button>
+            </div>
+            
+            <!-- Non-JS fallback forms hidden when JS is enabled -->
+            <div class="no-js-forms">
+                <h3>Quick Add (non-JavaScript fallback)</h3>
+                
+                <form action="/api/matches" method="post" style="margin-top: 10px;">
+                    <input type="hidden" name="team1" value="UCF">
+                    <input type="hidden" name="team2" value="Texas Tech">
+                    <input type="hidden" name="team1_score" value="4">
+                    <input type="hidden" name="team2_score" value="3">
+                    <input type="hidden" name="match_date" value="2025-03-27">
+                    <input type="hidden" name="conference" value="Big 12">
+                    <button type="submit">Add UCF 4-3 Texas Tech</button>
+                </form>
+                
+                <form action="/api/matches" method="post" style="margin-top: 10px;">
+                    <input type="hidden" name="team1" value="Baylor">
+                    <input type="hidden" name="team2" value="Arizona State">
+                    <input type="hidden" name="team1_score" value="4">
+                    <input type="hidden" name="team2_score" value="2">
+                    <input type="hidden" name="match_date" value="2025-03-27">
+                    <input type="hidden" name="conference" value="Big 12">
+                    <button type="submit">Add Baylor 4-2 Arizona State</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Standings Tab -->
+    <div class="tab-content" id="standings">
+        <div class="section">
+            <h2>Conference Standings</h2>
+            <button onclick="loadStandings()">Refresh Standings</button>
+            
+            <div id="standings-container" class="loading">
+                Loading standings...
+            </div>
+            
+            <!-- Non-JS fallback -->
+            <div class="no-js-content">
+                <p>JavaScript is disabled. <a href="/api/tiebreaker/Big 12" target="_blank">Click here to view standings</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Match History Tab -->
+    <div class="tab-content" id="match-history">
+        <div class="section">
+            <h2>Match History</h2>
+            <button onclick="loadMatches()">Refresh Matches</button>
+            
+            <div id="matches-container" class="loading">
+                Loading matches...
+            </div>
+            
+            <!-- Non-JS fallback -->
+            <div class="no-js-content">
+                <p>JavaScript is disabled. <a href="/api/matches" target="_blank">Click here to view matches</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Head-to-Head Tab -->
+    <div class="tab-content" id="head-to-head">
+        <div class="section">
+            <h2>Head-to-Head Comparison</h2>
+            
+            <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                <div style="flex: 1;">
+                    <label for="h2h-team1">Team 1</label>
+                    <input type="text" id="h2h-team1" name="h2h-team1" value="UCF">
+                </div>
+                <div style="flex: 1;">
+                    <label for="h2h-team2">Team 2</label>
+                    <input type="text" id="h2h-team2" name="h2h-team2" value="Texas Tech">
+                </div>
+            </div>
+            
+            <button onclick="loadHeadToHead()">Compare Teams</button>
+            
+            <div id="h2h-container">
+                <!-- Head to head results will be displayed here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Check if JavaScript is enabled
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide no-JS content, show JS content
+            var noJsElements = document.querySelectorAll('.no-js-forms, .no-js-content');
+            noJsElements.forEach(function(element) {
+                element.style.display = 'none';
+            });
+            
+            // Initialize
+            loadStandings();
+            loadMatches();
+            
+            // Set up tab switching
+            var tabs = document.querySelectorAll('.tab');
+            tabs.forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    var tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+            
+            // Handle form submission with JavaScript
+            document.getElementById('match-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitForm(this);
+            });
+        });
+        
+        // Switch tabs
+        function switchTab(tabId) {
+            // Hide all tabs and content
+            document.querySelectorAll('.tab').forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-content').forEach(function(content) {
+                content.classList.remove('active');
+            });
+            
+            // Show selected tab and content
+            document.querySelector('.tab[data-tab="' + tabId + '"]').classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            
+            // Load data for the tab if needed
+            if (tabId === 'standings') {
+                loadStandings();
+            } else if (tabId === 'match-history') {
+                loadMatches();
+            }
+        }
+        
+        // Set team value from button
+        function setTeam(teamName, field) {
+            document.getElementById(field).value = teamName;
+        }
+        
+        // Quick add a match
+        function quickAddMatch(team1, team2, score1, score2) {
+            var matchData = {
+                team1: team1,
+                team2: team2,
+                team1_score: score1,
+                team2_score: score2,
+                match_date: document.getElementById('match_date').value,
+                conference: 'Big 12'
+            };
+            
+            // Send via XHR
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/matches', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    showMessage('Match added: ' + team1 + ' ' + score1 + '-' + score2 + ' ' + team2, 'success');
+                    loadStandings();
+                    loadMatches();
+                } else {
+                    showMessage('Error adding match: ' + xhr.statusText, 'error');
+                }
+            };
+            
+            xhr.onerror = function() {
+                showMessage('Network error occurred while adding match', 'error');
+            };
+            
+            xhr.send(JSON.stringify(matchData));
+        }
+        
+        // Submit form via XHR
+        function submitForm(form) {
+            var formData = {
+                team1: form.team1.value,
+                team2: form.team2.value,
+                team1_score: parseInt(form.team1_score.value),
+                team2_score: parseInt(form.team2_score.value),
+                match_date: form.match_date.value,
+                conference: 'Big 12'
+            };
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    showMessage('Match added successfully!', 'success');
+                    // Clear form values
+                    form.team1_score.value = '';
+                    form.team2_score.value = '';
+                    loadStandings();
+                    loadMatches();
+                } else {
+                    showMessage('Error adding match: ' + xhr.statusText, 'error');
+                }
+            };
+            
+            xhr.onerror = function() {
+                showMessage('Network error occurred while adding match', 'error');
+            };
+            
+            xhr.send(JSON.stringify(formData));
+        }
+        
+        // Load standings data
+        function loadStandings() {
+            var container = document.getElementById('standings-container');
+            container.innerHTML = '<div class="loading">Loading standings...</div>';
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/api/tiebreaker/Big 12', true);
+            
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        displayStandings(data);
+                    } catch(e) {
+                        container.innerHTML = '<div class="error">Error parsing standings data</div>';
+                    }
+                } else {
+                    container.innerHTML = '<div class="error">Error loading standings: ' + xhr.statusText + '</div>';
+                }
+            };
+            
+            xhr.onerror = function() {
+                container.innerHTML = '<div class="error">Network error occurred while loading standings</div>';
+            };
+            
+            xhr.send();
+        }
+        
+        // Display standings data
+        function displayStandings(data) {
+            var container = document.getElementById('standings-container');
+            container.innerHTML = '';
+            
+            if (!data.final_seedings || data.final_seedings.length === 0) {
+                container.innerHTML = '<div>No standings data available yet.</div>';
+                return;
+            }
+            
+            // Final Seedings
+            var seedingsSection = document.createElement('div');
+            var seedingsHeader = document.createElement('h3');
+            seedingsHeader.textContent = 'Final Tournament Seedings';
+            seedingsSection.appendChild(seedingsHeader);
+            
+            data.final_seedings.forEach(function(team) {
+                var teamDiv = document.createElement('div');
+                teamDiv.className = 'seed-box';
+                
+                var tiebreakerInfo = '';
+                if (team.tiebreaker_applied) {
+                    tiebreakerInfo = '<div class="tiebreaker-info">Tiebreaker applied: ' + team.tiebreaker_applied + '</div>';
+                }
+                
+                teamDiv.innerHTML = `
+                    <div class="seed-number">${team.seed}</div>
+                    <div>
+                        <div style="font-weight: bold;">${team.team}</div>
+                        <div>${team.wins}-${team.losses} (${(team.win_percentage * 100).toFixed(1)}%)</div>
+                        ${tiebreakerInfo}
+                    </div>
+                `;
+                
+                seedingsSection.appendChild(teamDiv);
+            });
+            
+            container.appendChild(seedingsSection);
+            
+            // Regular standings
+            var regularSection = document.createElement('div');
+            var regularHeader = document.createElement('h3');
+            regularHeader.textContent = 'Regular Season Standings';
+            regularHeader.style.marginTop = '30px';
+            regularSection.appendChild(regularHeader);
+            
+            var table = document.createElement('table');
+            var headerRow = document.createElement('tr');
+            headerRow.innerHTML = `
+                <th>Team</th>
+                <th>MP</th>
+                <th>W</th>
+                <th>L</th>
+                <th>Win %</th>
+            `;
+            table.appendChild(headerRow);
+            
+            data.regular_standings.forEach(function(team) {
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${team.team}</td>
+                    <td>${team.matches_played}</td>
+                    <td>${team.wins}</td>
+                    <td>${team.losses}</td>
+                    <td>${(team.win_percentage * 100).toFixed(1)}%</td>
+                `;
+                table.appendChild(row);
+            });
+            
+            regularSection.appendChild(table);
+            container.appendChild(regularSection);
+        }
+        
+        // Load matches
+        function loadMatches() {
+            var container = document.getElementById('matches-container');
+            container.innerHTML = '<div class="loading">Loading matches...</div>';
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/api/matches', true);
+            
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        var matches = JSON.parse(xhr.responseText);
+                        displayMatches(matches);
+                    } catch(e) {
+                        container.innerHTML = '<div class="error">Error parsing match data</div>';
+                    }
+                } else {
+                    container.innerHTML = '<div class="error">Error loading matches: ' + xhr.statusText + '</div>';
+                }
+            };
+            
+            xhr.onerror = function() {
+                container.innerHTML = '<div class="error">Network error occurred while loading matches</div>';
+            };
+            
+            xhr.send();
+        }
+        
+        // Display matches
+        function displayMatches(matches) {
+            var container = document.getElementById('matches-container');
+            container.innerHTML = '';
+            
+            if (!matches || matches.length === 0) {
+                container.innerHTML = '<div>No matches available yet.</div>';
+                return;
+            }
+            
+            var table = document.createElement('table');
+            var headerRow = document.createElement('tr');
+            headerRow.innerHTML = `
+                <th>Date</th>
+                <th>Team 1</th>
+                <th>Score</th>
+                <th>Team 2</th>
+            `;
+            table.appendChild(headerRow);
+            
+            matches.forEach(function(match) {
+                var date = new Date(match.match_date).toLocaleDateString();
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${date}</td>
+                    <td>${match.team1}</td>
+                    <td>${match.team1_score} - ${match.team2_score}</td>
+                    <td>${match.team2}</td>
+                `;
+                table.appendChild(row);
+            });
+            
+            container.appendChild(table);
+        }
+        
+        // Load head-to-head
+        function loadHeadToHead() {
+            var team1 = document.getElementById('h2h-team1').value;
+            var team2 = document.getElementById('h2h-team2').value;
+            
+            if (!team1 || !team2) {
+                showMessage('Please enter both teams', 'error');
+                return;
+            }
+            
+            if (team1 === team2) {
+                showMessage('Please enter two different teams', 'error');
+                return;
+            }
+            
+            var container = document.getElementById('h2h-container');
+            container.innerHTML = '<div class="loading">Loading head-to-head data...</div>';
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/api/head-to-head/' + encodeURIComponent(team1) + '/' + encodeURIComponent(team2), true);
+            
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        displayHeadToHead(data, team1, team2);
+                    } catch(e) {
+                        container.innerHTML = '<div class="error">Error parsing head-to-head data</div>';
+                    }
+                } else {
+                    container.innerHTML = '<div class="error">Error loading head-to-head data: ' + xhr.statusText + '</div>';
+                }
+            };
+            
+            xhr.onerror = function() {
+                container.innerHTML = '<div class="error">Network error occurred while loading head-to-head data</div>';
+            };
+            
+            xhr.send();
+        }
+        
+        // Display head-to-head
+        function displayHeadToHead(data, team1, team2) {
+            var container = document.getElementById('h2h-container');
+            container.innerHTML = '';
+            
+            if (!data.matches || data.matches.length === 0) {
+                container.innerHTML = '<div class="message">No matches found between these teams.</div>';
+                return;
+            }
+            
+            // Summary
+            var summary = document.createElement('div');
+            summary.style.display = 'flex';
+            summary.style.justifyContent = 'space-around';
+            summary.style.margin = '20px 0';
+            summary.style.padding = '20px';
+            summary.style.backgroundColor = '#f8f9fa';
+            summary.style.borderRadius = '4px';
+            
+            summary.innerHTML = `
+                <div style="text-align: center;">
+                    <h3>${team1}</h3>
+                    <div style="font-size: 2em; font-weight: bold;">${data[team1]}</div>
+                </div>
+                <div style="text-align: center;">
+                    <h3>vs</h3>
+                </div>
+                <div style="text-align: center;">
+                    <h3>${team2}</h3>
+                    <div style="font-size: 2em; font-weight: bold;">${data[team2]}</div>
+                </div>
+            `;
+            
+            container.appendChild(summary);
+            
+            // Winner
+            var winnerDiv = document.createElement('div');
+            winnerDiv.style.textAlign = 'center';
+            winnerDiv.style.margin = '20px 0';
+            winnerDiv.style.fontSize = '1.2em';
+            
+            if (data.winner === 'Tied') {
+                winnerDiv.innerHTML = 'The series is tied.';
+            } else {
+                winnerDiv.innerHTML = '<strong>' + data.winner + '</strong> leads the series.';
+            }
+            
+            container.appendChild(winnerDiv);
+            
+            // Match history
+            var historyHeader = document.createElement('h3');
+            historyHeader.textContent = 'Match History';
+            container.appendChild(historyHeader);
+            
+            var table = document.createElement('table');
+            table.innerHTML = `
+                <tr>
+                    <th>Date</th>
+                    <th>Team 1</th>
+                    <th>Score</th>
+                    <th>Team 2</th>
+                </tr>
+            `;
+            
+            data.matches.forEach(function(match) {
+                var date = new Date(match.match_date).toLocaleDateString();
+                var row = document.createElement('tr');
+                
+                // Highlight winning team
+                if (match.team1 === team1 && match.team1_score > match.team2_score) {
+                    row.style.backgroundColor = '#d4edda';
+                } else if (match.team2 === team1 && match.team2_score > match.team1_score) {
+                    row.style.backgroundColor = '#d4edda';
+                } else if (match.team1 === team2 && match.team1_score > match.team2_score) {
+                    row.style.backgroundColor = '#f8d7da';
+                } else if (match.team2 === team2 && match.team2_score > match.team1_score) {
+                    row.style.backgroundColor = '#f8d7da';
+                }
+                
+                row.innerHTML = `
+                    <td>${date}</td>
+                    <td>${match.team1}</td>
+                    <td>${match.team1_score} - ${match.team2_score}</td>
+                    <td>${match.team2}</td>
+                `;
+                table.appendChild(row);
+            });
+            
+            container.appendChild(table);
+        }
+        
+        // Show message
+        function showMessage(message, type) {
+            var messageEl = document.getElementById('form-message');
+            messageEl.innerHTML = '<div class="message ' + type + '">' + message + '</div>';
+            
+            // Clear after 3 seconds
+            setTimeout(function() {
+                messageEl.innerHTML = '';
+            }, 3000);
+        }
+        
+        // Set today's date
+        document.getElementById('match_date').value = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html> 

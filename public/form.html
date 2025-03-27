@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennis Tiebreaker - Form Version</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #1a5276;
+        }
+        .section {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #1a5276;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #154360;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Big 12 Tennis Tiebreaker</h1>
+    <p>Form-based version (no JavaScript required)</p>
+    
+    <div class="section">
+        <h2>Add a Match</h2>
+        <form action="/api/matches" method="post">
+            <div style="display: flex; gap: 20px;">
+                <div style="flex: 1;">
+                    <label for="team1">Team 1</label>
+                    <input type="text" id="team1" name="team1" value="UCF" required>
+                </div>
+                <div style="flex: 1;">
+                    <label for="team2">Team 2</label>
+                    <input type="text" id="team2" name="team2" value="Texas Tech" required>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 20px;">
+                <div style="flex: 1;">
+                    <label for="team1_score">Team 1 Score</label>
+                    <input type="number" id="team1_score" name="team1_score" value="4" required>
+                </div>
+                <div style="flex: 1;">
+                    <label for="team2_score">Team 2 Score</label>
+                    <input type="number" id="team2_score" name="team2_score" value="3" required>
+                </div>
+            </div>
+            
+            <input type="hidden" name="match_date" value="2025-03-27">
+            <input type="hidden" name="conference" value="Big 12">
+            
+            <button type="submit">Add Match</button>
+        </form>
+    </div>
+    
+    <div class="section">
+        <h2>Quick Add Matches</h2>
+        <p>Click to add a pre-filled match:</p>
+        
+        <form action="/api/matches" method="post">
+            <input type="hidden" name="team1" value="UCF">
+            <input type="hidden" name="team2" value="Texas Tech">
+            <input type="hidden" name="team1_score" value="4">
+            <input type="hidden" name="team2_score" value="3">
+            <input type="hidden" name="match_date" value="2025-03-27">
+            <input type="hidden" name="conference" value="Big 12">
+            <button type="submit">Add UCF 4-3 Texas Tech</button>
+        </form>
+        
+        <form action="/api/matches" method="post" style="margin-top: 10px;">
+            <input type="hidden" name="team1" value="Baylor">
+            <input type="hidden" name="team2" value="Arizona State">
+            <input type="hidden" name="team1_score" value="4">
+            <input type="hidden" name="team2_score" value="2">
+            <input type="hidden" name="match_date" value="2025-03-27">
+            <input type="hidden" name="conference" value="Big 12">
+            <button type="submit">Add Baylor 4-2 Arizona State</button>
+        </form>
+        
+        <form action="/api/matches" method="post" style="margin-top: 10px;">
+            <input type="hidden" name="team1" value="TCU">
+            <input type="hidden" name="team2" value="Baylor">
+            <input type="hidden" name="team1_score" value="4">
+            <input type="hidden" name="team2_score" value="3">
+            <input type="hidden" name="match_date" value="2025-03-27">
+            <input type="hidden" name="conference" value="Big 12">
+            <button type="submit">Add TCU 4-3 Baylor</button>
+        </form>
+    </div>
+    
+    <div class="section">
+        <h2>View Data</h2>
+        <p>Click the links below to view data:</p>
+        <ul>
+            <li><a href="/api/matches" target="_blank">View All Matches</a></li>
+            <li><a href="/api/tiebreaker/Big 12" target="_blank">View Standings with Tiebreakers</a></li>
+        </ul>
+    </div>
+</body>
+</html> 

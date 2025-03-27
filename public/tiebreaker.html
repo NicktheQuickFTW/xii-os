@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Tennis Tiebreaker</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f9fc;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            margin-top: 0;
+            color: #3498db;
+            font-size: 1.3rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .team-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .team-btn {
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .team-btn:hover {
+            background-color: #e1e1e1;
+        }
+        
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .flex-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .flex-col {
+            flex: 1;
+        }
+        
+        .seed-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .seed-number {
+            background-color: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .seed-info {
+            flex: 1;
+        }
+        
+        .seed-team {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .seed-record {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .seed-tiebreaker {
+            font-size: 0.8rem;
+            color: #e74c3c;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .flex-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Big 12 Tennis Tiebreaker</h1>
+    
+    <div class="card">
+        <h2>Add Match Result</h2>
+        
+        <div class="team-buttons">
+            <div class="team-btn" onclick="document.getElementById('team1').value = 'UCF'">UCF</div>
+            <div class="team-btn" onclick="document.getElementById('team1').value = 'Texas Tech'">Texas Tech</div>
+            <div class="team-btn" onclick="document.getElementById('team1').value = 'TCU'">TCU</div>
+            <div class="team-btn" onclick="document.getElementById('team1').value = 'Baylor'">Baylor</div>
+            <div class="team-btn" onclick="document.getElementById('team1').value = 'Arizona State'">Arizona State</div>
+            <div class="team-btn" onclick="document.getElementById('team1').value = 'Arizona'">Arizona</div>
+        </div>
+        
+        <div class="flex-row">
+            <div class="flex-col">
+                <label for="team1">Team 1</label>
+                <input type="text" id="team1" placeholder="Enter team name">
+            </div>
+            <div class="flex-col">
+                <label for="team1_score">Score</label>
+                <input type="number" id="team1_score" min="0" max="7" placeholder="Score">
+            </div>
+        </div>
+        
+        <div class="team-buttons">
+            <div class="team-btn" onclick="document.getElementById('team2').value = 'UCF'">UCF</div>
+            <div class="team-btn" onclick="document.getElementById('team2').value = 'Texas Tech'">Texas Tech</div>
+            <div class="team-btn" onclick="document.getElementById('team2').value = 'TCU'">TCU</div>
+            <div class="team-btn" onclick="document.getElementById('team2').value = 'Baylor'">Baylor</div>
+            <div class="team-btn" onclick="document.getElementById('team2').value = 'Arizona State'">Arizona State</div>
+            <div class="team-btn" onclick="document.getElementById('team2').value = 'Arizona'">Arizona</div>
+        </div>
+        
+        <div class="flex-row">
+            <div class="flex-col">
+                <label for="team2">Team 2</label>
+                <input type="text" id="team2" placeholder="Enter team name">
+            </div>
+            <div class="flex-col">
+                <label for="team2_score">Score</label>
+                <input type="number" id="team2_score" min="0" max="7" placeholder="Score">
+            </div>
+        </div>
+        
+        <button onclick="addMatch()">Add Match</button>
+        <div id="add-message"></div>
+    </div>
+    
+    <div class="card">
+        <h2>Final Tournament Seedings</h2>
+        <button onclick="loadStandings()">Refresh Seedings</button>
+        <div id="seedings-container"></div>
+    </div>
+    
+    <div class="card">
+        <h2>Match Results</h2>
+        <button onclick="loadMatches()">View Matches</button>
+        <div id="matches-container"></div>
+    </div>
+    
+    <script>
+        // Load initial data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStandings();
+            loadMatches();
+        });
+        
+        // Add a match
+        function addMatch() {
+            const team1 = document.getElementById('team1').value.trim();
+            const team2 = document.getElementById('team2').value.trim();
+            const team1Score = parseInt(document.getElementById('team1_score').value);
+            const team2Score = parseInt(document.getElementById('team2_score').value);
+            const messageElement = document.getElementById('add-message');
+            
+            // Validate inputs
+            if (!team1 || !team2) {
+                messageElement.innerHTML = '<div class="message error">Please enter both team names</div>';
+                return;
+            }
+            
+            if (isNaN(team1Score) || isNaN(team2Score)) {
+                messageElement.innerHTML = '<div class="message error">Please enter scores for both teams</div>';
+                return;
+            }
+            
+            if (team1 === team2) {
+                messageElement.innerHTML = '<div class="message error">Teams cannot be the same</div>';
+                return;
+            }
+            
+            // Create match data
+            const matchData = {
+                team1: team1,
+                team2: team2,
+                team1_score: team1Score,
+                team2_score: team2Score,
+                match_date: new Date().toISOString().split('T')[0],
+                conference: 'Big 12'
+            };
+            
+            // Send to server
+            fetch('/api/matches', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(matchData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add match');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Show success message
+                messageElement.innerHTML = `<div class="message success">Match added: ${team1} ${team1Score}-${team2Score} ${team2}</div>`;
+                
+                // Clear form
+                document.getElementById('team1').value = '';
+                document.getElementById('team2').value = '';
+                document.getElementById('team1_score').value = '';
+                document.getElementById('team2_score').value = '';
+                
+                // Refresh data
+                loadStandings();
+                loadMatches();
+            })
+            .catch(error => {
+                messageElement.innerHTML = `<div class="message error">${error.message}</div>`;
+            });
+        }
+        
+        // Load standings and tiebreaker results
+        function loadStandings() {
+            const seedingsContainer = document.getElementById('seedings-container');
+            seedingsContainer.innerHTML = '<p>Loading standings...</p>';
+            
+            fetch('/api/tiebreaker/Big 12')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load standings');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.final_seedings || data.final_seedings.length === 0) {
+                        seedingsContainer.innerHTML = '<p>No standings data available. Add some matches first.</p>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    
+                    // Display seedings
+                    data.final_seedings.forEach(team => {
+                        const tiebreakerInfo = team.tiebreaker_applied 
+                            ? `<div class="seed-tiebreaker">Tiebreaker: ${team.tiebreaker_applied}</div>` 
+                            : '';
+                            
+                        html += `
+                            <div class="seed-card">
+                                <div class="seed-number">${team.seed}</div>
+                                <div class="seed-info">
+                                    <div class="seed-team">${team.team}</div>
+                                    <div class="seed-record">${team.wins}-${team.losses} (${(team.win_percentage * 100).toFixed(1)}%)</div>
+                                    ${tiebreakerInfo}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    // Add regular standings table
+                    html += `
+                        <h3 style="margin-top: 20px;">Regular Season Standings</h3>
+                        <table>
+                            <tr>
+                                <th>Team</th>
+                                <th>MP</th>
+                                <th>W</th>
+                                <th>L</th>
+                                <th>Win %</th>
+                            </tr>
+                    `;
+                    
+                    data.regular_standings.forEach(team => {
+                        html += `
+                            <tr>
+                                <td>${team.team}</td>
+                                <td>${team.matches_played}</td>
+                                <td>${team.wins}</td>
+                                <td>${team.losses}</td>
+                                <td>${(team.win_percentage * 100).toFixed(1)}%</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    html += '</table>';
+                    
+                    seedingsContainer.innerHTML = html;
+                })
+                .catch(error => {
+                    seedingsContainer.innerHTML = `<div class="message error">${error.message}</div>`;
+                });
+        }
+        
+        // Load matches
+        function loadMatches() {
+            const matchesContainer = document.getElementById('matches-container');
+            matchesContainer.innerHTML = '<p>Loading matches...</p>';
+            
+            fetch('/api/matches')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load matches');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.length === 0) {
+                        matchesContainer.innerHTML = '<p>No matches available. Add some matches first.</p>';
+                        return;
+                    }
+                    
+                    let html = `
+                        <table>
+                            <tr>
+                                <th>Date</th>
+                                <th>Team 1</th>
+                                <th>Score</th>
+                                <th>Team 2</th>
+                            </tr>
+                    `;
+                    
+                    // Sort matches by date (newest first)
+                    data.sort((a, b) => new Date(b.match_date) - new Date(a.match_date));
+                    
+                    data.forEach(match => {
+                        const date = new Date(match.match_date).toLocaleDateString();
+                        const team1Won = match.team1_score > match.team2_score;
+                        const team2Won = match.team2_score > match.team1_score;
+                        
+                        html += `
+                            <tr>
+                                <td>${date}</td>
+                                <td style="${team1Won ? 'font-weight: bold;' : ''}">${match.team1}</td>
+                                <td>${match.team1_score} - ${match.team2_score}</td>
+                                <td style="${team2Won ? 'font-weight: bold;' : ''}">${match.team2}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    html += '</table>';
+                    matchesContainer.innerHTML = html;
+                })
+                .catch(error => {
+                    matchesContainer.innerHTML = `<div class="message error">${error.message}</div>`;
+                });
+        }
+    </script>
+</body>
+</html> 
