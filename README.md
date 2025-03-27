@@ -41,7 +41,7 @@ XII OS consists of several integrated modules:
 
 1. Install dependencies:
    ```
-   npm install
+   npm install --legacy-peer-deps
    ```
 
 2. Create a `.env` file in the root directory with the following variables:
@@ -60,6 +60,20 @@ XII OS consists of several integrated modules:
    npm start
    ```
 
+## Project Structure
+
+- `/modules` - Individual functional modules
+- `/shared` - Shared components, middleware, and utilities
+- `/config` - Configuration files
+- `/docs` - Documentation
+- `/tests` - Test files
+
+## Development Workflow
+
+- Create feature branches for new development
+- Follow the modular architecture pattern
+- Maintain consistency across modules
+
 ## API Documentation
 
 API endpoints will be available at:
@@ -77,7 +91,7 @@ API endpoints will be available at:
 - **Database**: MongoDB with Mongoose
 - **Authentication**: Passport, JWT
 - **Security**: Helmet, CORS, Rate Limiting
-- **AI/ML**: TensorFlow
+- **AI/ML**: TensorFlow.js
 - **Real-time Communication**: Socket.io
 
 ## Development
