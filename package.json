@@ -8,6 +8,8 @@
     "dev": "nodemon app.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@mendable/firecrawl": "^1.20.1",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.8",
     "compression": "^1.7.4",
@@ -16,8 +18,10 @@
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
+    "knex": "^3.1.0",
     "morgan": "^1.10.0",
-    "pg": "^8.11.3"
+    "pg": "^8.14.1",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XII-OS Claude AI Integration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
+    }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .button-container {
+      margin: 20px 0;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    #claude-response {
+      background-color: #f9f9f9;
+      border-left: 4px solid #4CAF50;
+      padding: 15px;
+      margin: 20px 0;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>XII-OS Claude AI Integration</h1>
+  
+  <div class="card">
+    <h2>Claude Context Protocol Demo</h2>
+    <p>This demo shows how XII-OS integrates with Claude AI using the context protocol.</p>
+    
+    <div class="button-container">
+      <button id="init-claude">Initialize Claude Context</button>
+      <button id="ask-claude" disabled>Ask About Transfers</button>
+    </div>
+    
+    <h3>Response:</h3>
+    <div id="claude-response">
+      Claude response will appear here...
+    </div>
+  </div>
+  
+  <div class="card">
+    <h2>About Claude AI Integration</h2>
+    <p>The Claude AI integration allows XII-OS to:</p>
+    <ul>
+      <li>Analyze transfer portal data intelligently</li>
+      <li>Provide natural language insights on sports data</li>
+      <li>Maintain conversation context between user interactions</li>
+      <li>Generate custom reports based on the available data</li>
+    </ul>
+  </div>
+  
+  <script src="claude-client.js"></script>
+</body>
+</html> 

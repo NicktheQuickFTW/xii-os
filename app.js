@@ -377,6 +377,47 @@ const transferPortal = require('./modules/transfer-portal');
 app.use('/api/transfer-portal/players', transferPortal.routes.players);
 app.use('/api/transfer-portal/nil-valuations', transferPortal.routes.nilValuations);
 
+// FireCrawl Integration
+app.get('/api/basketball-transfers', async (req, res) => {
+  try {
+    const Firecrawl = require('@mendable/firecrawl').default;
+    const { z } = require('zod');
+    
+    const firecrawl = new Firecrawl({apiKey: "fc-2f0d170ccded40a6aed2e0203f4e6756"});
+
+    const schema = z.object({
+      transfers: z.array(z.object({
+        rank: z.number().optional(),
+        name: z.string().optional(),
+        position: z.string().optional(),
+        rating: z.number().optional(),
+        nil_value: z.string().optional(),
+        status: z.string().optional(),
+        last_team: z.string().optional(),
+        new_team: z.string().optional(),
+        class: z.string().optional(),
+        hometown: z.string().optional()
+      }))
+    });
+    
+    const extractResult = await firecrawl.extract([
+      "https://on3.com/transfer-portal/industry/basketball"
+    ], {
+      prompt: "Extract basketball transfer data including rank, player name, position, rating, NIL value, status, previous team, destination team, class year, and hometown. Include player metrics and recruiting ratings when available. Format the data as a structured table with clear headers.",
+      schema,
+    });
+    
+    res.json(extractResult);
+  } catch (error) {
+    console.error('FireCrawl extraction error:', error);
+    res.status(500).json({ error: 'Failed to extract basketball transfer data' });
+  }
+});
+
+// Claude AI Integration
+const claudeAI = require('./modules/claude-ai');
+app.use('/api/claude', claudeAI.routes);
+
 // app.use('/api/content-management', require('./modules/content-management/routes'));
 
 // Error handling middleware
