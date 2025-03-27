@@ -3,154 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Tennis Tiebreaker</title>
+    <title>Big 12 Tennis Tiebreaker</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f7f9fc;
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
         }
         
-        h1 {
-            color: #2c3e50;
-            text-align: center;
+        body {
+            background-color: var(--light-bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            padding-bottom: 50px;
+        }
+        
+        .header-bar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
             margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .app-title {
+            margin-bottom: 0;
         }
         
         .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        h2 {
-            margin-top: 0;
-            color: #3498db;
-            font-size: 1.3rem;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        
-        button {
-            background-color: #3498db;
-            color: white;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border: none;
-            padding: 10px 15px;
+        }
+        
+        .card-header {
+            background-color: rgba(13, 110, 253, 0.1);
+            border-bottom: 1px solid rgba(13, 110, 253, 0.2);
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        
+        .quick-team {
+            display: inline-block;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
             border-radius: 4px;
+            padding: 6px 12px;
+            margin: 0 5px 8px 0;
             cursor: pointer;
-            font-size: 0.9rem;
+            transition: all 0.2s;
         }
         
-        button:hover {
-            background-color: #2980b9;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        
-        th {
-            background-color: #f2f2f2;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        .team-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .team-btn {
-            background-color: #f1f1f1;
-            border: 1px solid #ddd;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        
-        .team-btn:hover {
-            background-color: #e1e1e1;
-        }
-        
-        .message {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-        }
-        
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .flex-row {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .flex-col {
-            flex: 1;
+        .quick-team:hover {
+            background-color: var(--primary-color);
+            color: white;
         }
         
         .seed-card {
             background-color: white;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             padding: 15px;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
+            transition: transform 0.2s;
+        }
+        
+        .seed-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         .seed-number {
-            background-color: #3498db;
+            background-color: var(--primary-color);
             color: white;
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             margin-right: 15px;
+            font-size: 1.2rem;
         }
         
         .seed-info {
@@ -160,91 +102,229 @@
         .seed-team {
             font-weight: bold;
             margin-bottom: 3px;
+            font-size: 1rem;
         }
         
         .seed-record {
             font-size: 0.85rem;
-            color: #666;
+            color: #6c757d;
         }
         
         .seed-tiebreaker {
             font-size: 0.8rem;
-            color: #e74c3c;
+            color: var(--danger-color);
             margin-top: 5px;
         }
         
+        .match-item {
+            border-left: 3px solid transparent;
+        }
+        
+        .team-win {
+            font-weight: bold;
+        }
+        
+        .score-badge {
+            font-size: 0.9rem;
+            padding: 3px 8px;
+        }
+        
+        .stats-container {
+            height: 300px;
+        }
+        
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+        }
+        
         @media (max-width: 768px) {
-            .flex-row {
-                flex-direction: column;
+            .quick-teams-container {
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
-    <h1>Big 12 Tennis Tiebreaker</h1>
-    
-    <div class="card">
-        <h2>Add Match Result</h2>
-        
-        <div class="team-buttons">
-            <div class="team-btn" onclick="document.getElementById('team1').value = 'UCF'">UCF</div>
-            <div class="team-btn" onclick="document.getElementById('team1').value = 'Texas Tech'">Texas Tech</div>
-            <div class="team-btn" onclick="document.getElementById('team1').value = 'TCU'">TCU</div>
-            <div class="team-btn" onclick="document.getElementById('team1').value = 'Baylor'">Baylor</div>
-            <div class="team-btn" onclick="document.getElementById('team1').value = 'Arizona State'">Arizona State</div>
-            <div class="team-btn" onclick="document.getElementById('team1').value = 'Arizona'">Arizona</div>
+    <div class="header-bar">
+        <div class="container">
+            <h1 class="app-title">Big 12 Tennis Tiebreaker</h1>
         </div>
-        
-        <div class="flex-row">
-            <div class="flex-col">
-                <label for="team1">Team 1</label>
-                <input type="text" id="team1" placeholder="Enter team name">
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Add Match Result</span>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#addMatchCollapse">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="collapse show" id="addMatchCollapse">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Team 1</label>
+                                <div class="mb-2 quick-teams-container">
+                                    <span class="quick-team" data-target="team1" data-team="UCF">UCF</span>
+                                    <span class="quick-team" data-target="team1" data-team="Texas Tech">Texas Tech</span>
+                                    <span class="quick-team" data-target="team1" data-team="TCU">TCU</span>
+                                    <span class="quick-team" data-target="team1" data-team="Baylor">Baylor</span>
+                                    <span class="quick-team" data-target="team1" data-team="Arizona State">Arizona State</span>
+                                    <span class="quick-team" data-target="team1" data-team="Arizona">Arizona</span>
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="team1" placeholder="Team name">
+                                    <input type="number" class="form-control" id="team1_score" placeholder="Score" min="0" max="7">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Team 2</label>
+                                <div class="mb-2 quick-teams-container">
+                                    <span class="quick-team" data-target="team2" data-team="UCF">UCF</span>
+                                    <span class="quick-team" data-target="team2" data-team="Texas Tech">Texas Tech</span>
+                                    <span class="quick-team" data-target="team2" data-team="TCU">TCU</span>
+                                    <span class="quick-team" data-target="team2" data-team="Baylor">Baylor</span>
+                                    <span class="quick-team" data-target="team2" data-team="Arizona State">Arizona State</span>
+                                    <span class="quick-team" data-target="team2" data-team="Arizona">Arizona</span>
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="team2" placeholder="Team name">
+                                    <input type="number" class="form-control" id="team2_score" placeholder="Score" min="0" max="7">
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="match_date" class="form-label">Match Date</label>
+                                <input type="date" class="form-control" id="match_date">
+                            </div>
+                            
+                            <button class="btn btn-primary w-100" onclick="addMatch()">
+                                <i class="fas fa-plus-circle me-2"></i>Add Match
+                            </button>
+                            
+                            <div id="add-message" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Quick Match Templates</span>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#quickMatchCollapse">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="collapse show" id="quickMatchCollapse">
+                        <div class="card-body">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary w-100 mb-2" onclick="quickAddMatch('UCF', 'Texas Tech', 4, 3)">
+                                        UCF 4-3 Texas Tech
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary w-100 mb-2" onclick="quickAddMatch('Baylor', 'Arizona State', 4, 2)">
+                                        Baylor 4-2 ASU
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary w-100 mb-2" onclick="quickAddMatch('Arizona State', 'TCU', 4, 1)">
+                                        ASU 4-1 TCU
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary w-100 mb-2" onclick="quickAddMatch('TCU', 'Baylor', 4, 3)">
+                                        TCU 4-3 Baylor
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Team Win Distribution</span>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#statsCollapse">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="collapse show" id="statsCollapse">
+                        <div class="card-body">
+                            <div class="stats-container">
+                                <canvas id="winsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="flex-col">
-                <label for="team1_score">Score</label>
-                <input type="number" id="team1_score" min="0" max="7" placeholder="Score">
+            
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Final Tournament Seedings</span>
+                        <div>
+                            <button class="btn btn-sm btn-primary" onclick="loadStandings()">
+                                <i class="fas fa-sync-alt me-1"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" id="seedings-container">
+                        <div class="loading-spinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Match Results</span>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-primary" onclick="loadMatches()">
+                                <i class="fas fa-sync-alt me-1"></i>Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" id="matches-container">
+                        <div class="loading-spinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="team-buttons">
-            <div class="team-btn" onclick="document.getElementById('team2').value = 'UCF'">UCF</div>
-            <div class="team-btn" onclick="document.getElementById('team2').value = 'Texas Tech'">Texas Tech</div>
-            <div class="team-btn" onclick="document.getElementById('team2').value = 'TCU'">TCU</div>
-            <div class="team-btn" onclick="document.getElementById('team2').value = 'Baylor'">Baylor</div>
-            <div class="team-btn" onclick="document.getElementById('team2').value = 'Arizona State'">Arizona State</div>
-            <div class="team-btn" onclick="document.getElementById('team2').value = 'Arizona'">Arizona</div>
-        </div>
-        
-        <div class="flex-row">
-            <div class="flex-col">
-                <label for="team2">Team 2</label>
-                <input type="text" id="team2" placeholder="Enter team name">
-            </div>
-            <div class="flex-col">
-                <label for="team2_score">Score</label>
-                <input type="number" id="team2_score" min="0" max="7" placeholder="Score">
-            </div>
-        </div>
-        
-        <button onclick="addMatch()">Add Match</button>
-        <div id="add-message"></div>
     </div>
     
-    <div class="card">
-        <h2>Final Tournament Seedings</h2>
-        <button onclick="loadStandings()">Refresh Seedings</button>
-        <div id="seedings-container"></div>
-    </div>
-    
-    <div class="card">
-        <h2>Match Results</h2>
-        <button onclick="loadMatches()">View Matches</button>
-        <div id="matches-container"></div>
-    </div>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
-        // Load initial data when page loads
+        // Set current date as default
         document.addEventListener('DOMContentLoaded', function() {
+            // Set today as default date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('match_date').value = today;
+            
+            // Add event listeners for quick team buttons
+            document.querySelectorAll('.quick-team').forEach(button => {
+                button.addEventListener('click', function() {
+                    const team = this.getAttribute('data-team');
+                    const target = this.getAttribute('data-target');
+                    document.getElementById(target).value = team;
+                });
+            });
+            
+            // Load initial data
             loadStandings();
             loadMatches();
         });
@@ -255,21 +335,25 @@
             const team2 = document.getElementById('team2').value.trim();
             const team1Score = parseInt(document.getElementById('team1_score').value);
             const team2Score = parseInt(document.getElementById('team2_score').value);
+            const matchDate = document.getElementById('match_date').value;
             const messageElement = document.getElementById('add-message');
+            
+            // Reset message
+            messageElement.innerHTML = '';
             
             // Validate inputs
             if (!team1 || !team2) {
-                messageElement.innerHTML = '<div class="message error">Please enter both team names</div>';
+                messageElement.innerHTML = '<div class="alert alert-danger">Please enter both team names</div>';
                 return;
             }
             
             if (isNaN(team1Score) || isNaN(team2Score)) {
-                messageElement.innerHTML = '<div class="message error">Please enter scores for both teams</div>';
+                messageElement.innerHTML = '<div class="alert alert-danger">Please enter scores for both teams</div>';
                 return;
             }
             
             if (team1 === team2) {
-                messageElement.innerHTML = '<div class="message error">Teams cannot be the same</div>';
+                messageElement.innerHTML = '<div class="alert alert-danger">Teams cannot be the same</div>';
                 return;
             }
             
@@ -279,11 +363,13 @@
                 team2: team2,
                 team1_score: team1Score,
                 team2_score: team2Score,
-                match_date: new Date().toISOString().split('T')[0],
+                match_date: matchDate || new Date().toISOString().split('T')[0],
                 conference: 'Big 12'
             };
             
             // Send to server
+            messageElement.innerHTML = '<div class="alert alert-info">Adding match...</div>';
+            
             fetch('/api/matches', {
                 method: 'POST',
                 headers: {
@@ -298,8 +384,12 @@
                 return response.json();
             })
             .then(data => {
-                // Show success message
-                messageElement.innerHTML = `<div class="message success">Match added: ${team1} ${team1Score}-${team2Score} ${team2}</div>`;
+                // Show success message with animation
+                messageElement.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>Match added: ${team1} ${team1Score}-${team2Score} ${team2}
+                    </div>
+                `;
                 
                 // Clear form
                 document.getElementById('team1').value = '';
@@ -312,14 +402,35 @@
                 loadMatches();
             })
             .catch(error => {
-                messageElement.innerHTML = `<div class="message error">${error.message}</div>`;
+                messageElement.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>${error.message}
+                    </div>
+                `;
             });
+        }
+        
+        // Quick add a match
+        function quickAddMatch(team1, team2, team1Score, team2Score) {
+            document.getElementById('team1').value = team1;
+            document.getElementById('team1_score').value = team1Score;
+            document.getElementById('team2').value = team2;
+            document.getElementById('team2_score').value = team2Score;
+            
+            // Add the match
+            addMatch();
         }
         
         // Load standings and tiebreaker results
         function loadStandings() {
             const seedingsContainer = document.getElementById('seedings-container');
-            seedingsContainer.innerHTML = '<p>Loading standings...</p>';
+            seedingsContainer.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
             
             fetch('/api/tiebreaker/Big 12')
                 .then(response => {
@@ -330,45 +441,59 @@
                 })
                 .then(data => {
                     if (!data.final_seedings || data.final_seedings.length === 0) {
-                        seedingsContainer.innerHTML = '<p>No standings data available. Add some matches first.</p>';
+                        seedingsContainer.innerHTML = `
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>No standings data available. Add some matches first.
+                            </div>
+                        `;
                         return;
                     }
                     
-                    let html = '';
+                    let seedingsHtml = '<div class="mb-4">';
                     
                     // Display seedings
                     data.final_seedings.forEach(team => {
                         const tiebreakerInfo = team.tiebreaker_applied 
-                            ? `<div class="seed-tiebreaker">Tiebreaker: ${team.tiebreaker_applied}</div>` 
+                            ? `<div class="seed-tiebreaker"><i class="fas fa-exclamation-triangle me-1"></i>Tiebreaker: ${team.tiebreaker_applied}</div>` 
                             : '';
                             
-                        html += `
+                        seedingsHtml += `
                             <div class="seed-card">
                                 <div class="seed-number">${team.seed}</div>
                                 <div class="seed-info">
                                     <div class="seed-team">${team.team}</div>
-                                    <div class="seed-record">${team.wins}-${team.losses} (${(team.win_percentage * 100).toFixed(1)}%)</div>
+                                    <div class="seed-record">
+                                        <span class="badge bg-success me-1">${team.wins} W</span>
+                                        <span class="badge bg-danger me-1">${team.losses} L</span>
+                                        <span class="badge bg-secondary">${(team.win_percentage * 100).toFixed(1)}%</span>
+                                    </div>
                                     ${tiebreakerInfo}
                                 </div>
                             </div>
                         `;
                     });
                     
+                    seedingsHtml += '</div>';
+                    
                     // Add regular standings table
-                    html += `
-                        <h3 style="margin-top: 20px;">Regular Season Standings</h3>
-                        <table>
-                            <tr>
-                                <th>Team</th>
-                                <th>MP</th>
-                                <th>W</th>
-                                <th>L</th>
-                                <th>Win %</th>
-                            </tr>
+                    seedingsHtml += `
+                        <h5 class="mt-4 mb-3"><i class="fas fa-table me-2"></i>Regular Season Standings</h5>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Team</th>
+                                        <th>MP</th>
+                                        <th>W</th>
+                                        <th>L</th>
+                                        <th>Win %</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                     `;
                     
                     data.regular_standings.forEach(team => {
-                        html += `
+                        seedingsHtml += `
                             <tr>
                                 <td>${team.team}</td>
                                 <td>${team.matches_played}</td>
@@ -379,19 +504,95 @@
                         `;
                     });
                     
-                    html += '</table>';
+                    seedingsHtml += '</tbody></table></div>';
                     
-                    seedingsContainer.innerHTML = html;
+                    seedingsContainer.innerHTML = seedingsHtml;
+                    
+                    // Update the wins chart
+                    updateWinsChart(data.regular_standings);
                 })
                 .catch(error => {
-                    seedingsContainer.innerHTML = `<div class="message error">${error.message}</div>`;
+                    seedingsContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>${error.message}
+                        </div>
+                    `;
                 });
+        }
+        
+        // Update the wins chart
+        function updateWinsChart(standings) {
+            if (!standings || standings.length === 0) return;
+            
+            // Get chart context
+            const ctx = document.getElementById('winsChart').getContext('2d');
+            
+            // Prepare data
+            const teams = standings.map(team => team.team);
+            const wins = standings.map(team => team.wins);
+            const losses = standings.map(team => team.losses);
+            
+            // Check if chart already exists and destroy it
+            if (window.winsChart) {
+                window.winsChart.destroy();
+            }
+            
+            // Create new chart
+            window.winsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: teams,
+                    datasets: [
+                        {
+                            label: 'Wins',
+                            data: wins,
+                            backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                            borderColor: 'rgba(25, 135, 84, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Losses',
+                            data: losses,
+                            backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                            borderColor: 'rgba(220, 53, 69, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Team Performance',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
         }
         
         // Load matches
         function loadMatches() {
             const matchesContainer = document.getElementById('matches-container');
-            matchesContainer.innerHTML = '<p>Loading matches...</p>';
+            matchesContainer.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `;
             
             fetch('/api/matches')
                 .then(response => {
@@ -402,44 +603,84 @@
                 })
                 .then(data => {
                     if (data.length === 0) {
-                        matchesContainer.innerHTML = '<p>No matches available. Add some matches first.</p>';
+                        matchesContainer.innerHTML = `
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>No matches available. Add some matches first.
+                            </div>
+                        `;
                         return;
                     }
                     
-                    let html = `
-                        <table>
-                            <tr>
-                                <th>Date</th>
-                                <th>Team 1</th>
-                                <th>Score</th>
-                                <th>Team 2</th>
-                            </tr>
-                    `;
+                    // Group matches by date
+                    const matchesByDate = groupByDate(data);
                     
-                    // Sort matches by date (newest first)
-                    data.sort((a, b) => new Date(b.match_date) - new Date(a.match_date));
+                    let html = '';
                     
-                    data.forEach(match => {
-                        const date = new Date(match.match_date).toLocaleDateString();
-                        const team1Won = match.team1_score > match.team2_score;
-                        const team2Won = match.team2_score > match.team1_score;
+                    // Display matches grouped by date
+                    Object.keys(matchesByDate).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
+                        const formattedDate = new Date(date).toLocaleDateString('en-US', { 
+                            weekday: 'short', 
+                            month: 'short', 
+                            day: 'numeric',
+                            year: 'numeric'
+                        });
                         
                         html += `
-                            <tr>
-                                <td>${date}</td>
-                                <td style="${team1Won ? 'font-weight: bold;' : ''}">${match.team1}</td>
-                                <td>${match.team1_score} - ${match.team2_score}</td>
-                                <td style="${team2Won ? 'font-weight: bold;' : ''}">${match.team2}</td>
-                            </tr>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0"><i class="far fa-calendar-alt me-2"></i>${formattedDate}</h6>
+                                    <span class="badge bg-info">${matchesByDate[date].length} matches</span>
+                                </div>
+                                <div class="list-group">
                         `;
+                        
+                        matchesByDate[date].forEach(match => {
+                            const team1Won = match.team1_score > match.team2_score;
+                            const team2Won = match.team2_score > match.team1_score;
+                            
+                            html += `
+                                <div class="list-group-item list-group-item-action match-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-5 text-end">
+                                            <span class="${team1Won ? 'team-win' : ''}">${match.team1}</span>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <span class="badge bg-light text-dark score-badge">
+                                                ${match.team1_score} - ${match.team2_score}
+                                            </span>
+                                        </div>
+                                        <div class="col-5">
+                                            <span class="${team2Won ? 'team-win' : ''}">${match.team2}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        html += '</div></div>';
                     });
                     
-                    html += '</table>';
                     matchesContainer.innerHTML = html;
                 })
                 .catch(error => {
-                    matchesContainer.innerHTML = `<div class="message error">${error.message}</div>`;
+                    matchesContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>${error.message}
+                        </div>
+                    `;
                 });
+        }
+        
+        // Helper function to group matches by date
+        function groupByDate(matches) {
+            return matches.reduce((acc, match) => {
+                const date = match.match_date;
+                if (!acc[date]) {
+                    acc[date] = [];
+                }
+                acc[date].push(match);
+                return acc;
+            }, {});
         }
     </script>
 </body>
