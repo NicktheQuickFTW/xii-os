@@ -7,6 +7,10 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 require('dotenv').config();
 
+// Database connection
+const connectDB = require('./config/database');
+connectDB();
+
 // Create Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,12 +35,17 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to XII OS - Big 12 Conference Operating System' });
 });
 
-// Module Routes (to be implemented)
+// Module Routes
 // app.use('/api/athletic-competition', require('./modules/athletic-competition/routes'));
 // app.use('/api/weather-intelligence', require('./modules/weather-intelligence/routes'));
 // app.use('/api/partnerships-optimization', require('./modules/partnerships-optimization/routes'));
 // app.use('/api/performance-analytics', require('./modules/performance-analytics/routes'));
-// app.use('/api/transfer-portal', require('./modules/transfer-portal/routes'));
+
+// Transfer Portal Module Routes
+const transferPortal = require('./modules/transfer-portal');
+app.use('/api/transfer-portal/players', transferPortal.routes.players);
+app.use('/api/transfer-portal/nil-valuations', transferPortal.routes.nilValuations);
+
 // app.use('/api/content-management', require('./modules/content-management/routes'));
 
 // Error handling middleware
