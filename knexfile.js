@@ -1,6 +1,5 @@
-/**
- * Database Configuration
- */
+// Update with your config settings.
+require('dotenv').config();
 
 module.exports = {
   development: {
@@ -18,12 +17,12 @@ module.exports = {
       max: 10
     },
     migrations: {
-      directory: '../db/migrations'
+      directory: './db/migrations'
     },
     seeds: {
-      directory: '../db/seeds'
+      directory: './db/seeds'
     }
   },
   
   // Additional environments (staging, production, etc.)
-} 
+}; 

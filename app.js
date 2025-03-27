@@ -8,8 +8,7 @@ const path = require('path');
 require('dotenv').config();
 
 // Database connection
-const connectDB = require('./config/database');
-connectDB();
+const knex = require('./db/knex');
 
 // Create Express app
 const app = express();
