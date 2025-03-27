@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Big 12 Tennis Tiebreaker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container { max-width: 1000px; margin-top: 2rem; }
+        .match-form { background: #f8f9fa; padding: 1.5rem; border-radius: 8px; }
+        .standings-table { margin-top: 2rem; }
+        .seed-number { font-weight: bold; background: #0d6efd; color: white; width: 30px; height: 30px; 
+                      border-radius: 50%; display: inline-flex; align-items: center; 
+                      justify-content: center; margin-right: 8px; }
+        .tiebreaker-info { font-size: 0.85rem; color: #6c757d; }
+        .nav-tabs { margin-bottom: 1rem; }
+        .matches-list { margin-top: 1rem; }
+        .head-to-head-form { margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Big 12 Tennis Tiebreaker</h1>
+        
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="standings-tab" data-bs-toggle="tab" data-bs-target="#standings" type="button" role="tab" aria-controls="standings" aria-selected="true">Standings</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="matches-tab" data-bs-toggle="tab" data-bs-target="#matches" type="button" role="tab" aria-controls="matches" aria-selected="false">Add Matches</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="head-to-head-tab" data-bs-toggle="tab" data-bs-target="#head-to-head" type="button" role="tab" aria-controls="head-to-head" aria-selected="false">Head-to-Head</button>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="myTabContent">
+            <!-- Standings Tab -->
+            <div class="tab-pane fade show active" id="standings" role="tabpanel" aria-labelledby="standings-tab">
+                <div class="standings-table">
+                    <h3>Conference Standings & Seedings</h3>
+                    <p>This shows the final seedings based on the Big 12 tiebreaker policy.</p>
+                    <button class="btn btn-primary mb-3" onclick="loadTiebreakers()">Refresh Standings</button>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            Final Tournament Seedings
+                        </div>
+                        <div class="card-body">
+                            <div id="finalSeedings"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            Regular Season Standings
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Team</th>
+                                        <th>Matches Played</th>
+                                        <th>Wins</th>
+                                        <th>Losses</th>
+                                        <th>Win %</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="standingsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Matches Tab -->
+            <div class="tab-pane fade" id="matches" role="tabpanel" aria-labelledby="matches-tab">
+                <div class="match-form">
+                    <h3>Add New Match</h3>
+                    <div class="mb-4 p-3 border rounded bg-light">
+                        <h5>Quick Add Big 12 Teams</h5>
+                        <div class="row g-2 mb-2">
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('UCF')">UCF</button></div>
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('Texas Tech')">Texas Tech</button></div>
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('Oklahoma State')">Oklahoma State</button></div>
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('Baylor')">Baylor</button></div>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('Arizona State')">Arizona State</button></div>
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('TCU')">TCU</button></div>
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('Arizona')">Arizona</button></div>
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('BYU')">BYU</button></div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('Kansas State')">Kansas State</button></div>
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('Kansas')">Kansas</button></div>
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('Iowa State')">Iowa State</button></div>
+                            <div class="col"><button class="btn btn-sm btn-outline-primary w-100" onclick="setTeam('Utah')">Utah</button></div>
+                        </div>
+                    </div>
+                    <div class="mb-4 p-3 border rounded bg-light">
+                        <h5>Quick Add Big 12 Matches</h5>
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-2">
+                                <button class="btn btn-sm btn-outline-success w-100" onclick="quickAddMatch('UCF', 'Texas Tech', 4, 3)">
+                                    UCF 4-3 Texas Tech
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <button class="btn btn-sm btn-outline-success w-100" onclick="quickAddMatch('Baylor', 'Arizona State', 4, 2)">
+                                    Baylor 4-2 Arizona State
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <button class="btn btn-sm btn-outline-success w-100" onclick="quickAddMatch('Arizona State', 'TCU', 4, 1)">
+                                    Arizona State 4-1 TCU
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <button class="btn btn-sm btn-outline-success w-100" onclick="quickAddMatch('TCU', 'Baylor', 4, 3)">
+                                    TCU 4-3 Baylor
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <button class="btn btn-sm btn-outline-success w-100" onclick="quickAddMatch('BYU', 'Kansas State', 4, 2)">
+                                    BYU 4-2 Kansas State
+                                </button>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <button class="btn btn-sm btn-outline-success w-100" onclick="quickAddMatch('Cincinnati', 'Colorado', 4, 3)">
+                                    Cincinnati 4-3 Colorado
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="matchForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Team 1</label>
+                                <input type="text" class="form-control" id="team1" value="UCF" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Team 2</label>
+                                <input type="text" class="form-control" id="team2" value="Baylor" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Team 1 Score</label>
+                                <input type="number" class="form-control" id="team1Score" value="4" required>
+                                <div class="btn-group mt-2" role="group">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('team1Score').value='4'">4</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('team1Score').value='3'">3</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('team1Score').value='2'">2</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('team1Score').value='1'">1</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('team1Score').value='0'">0</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Team 2 Score</label>
+                                <input type="number" class="form-control" id="team2Score" value="3" required>
+                                <div class="btn-group mt-2" role="group">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('team2Score').value='4'">4</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('team2Score').value='3'">3</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('team2Score').value='2'">2</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('team2Score').value='1'">1</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('team2Score').value='0'">0</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Match Date</label>
+                                <input type="date" class="form-control" id="matchDate" value="2025-03-27" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Conference</label>
+                                <input type="text" class="form-control" id="conference" value="Big 12" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Match</button>
+                    </form>
+                </div>
+                
+                <div class="matches-list">
+                    <h3>Recent Matches</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Team 1</th>
+                                <th>Score</th>
+                                <th>Team 2</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matchesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Head-to-Head Tab -->
+            <div class="tab-pane fade" id="head-to-head" role="tabpanel" aria-labelledby="head-to-head-tab">
+                <h3>Head-to-Head Results</h3>
+                <p>View the head-to-head record between any two teams.</p>
+                
+                <div class="head-to-head-form">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <select class="form-select" id="h2hTeam1">
+                                <option value="">Select Team 1</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <select class="form-select" id="h2hTeam2">
+                                <option value="">Select Team 2</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary w-100" onclick="loadHeadToHead()">Compare</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="headToHeadResults" class="d-none">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            Head-to-Head Summary
+                        </div>
+                        <div class="card-body">
+                            <div id="h2hSummary"></div>
+                        </div>
+                    </div>
+                    
+                    <h4>Match History</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Team 1</th>
+                                <th>Score</th>
+                                <th>Team 2</th>
+                            </tr>
+                        </thead>
+                        <tbody id="h2hMatchesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let allTeams = [];
+        let currentTeamSelection = null;
+        
+        // Set team function for quick add buttons
+        function setTeam(teamName) {
+            if (currentTeamSelection === null || currentTeamSelection === 'team1') {
+                document.getElementById('team1').value = teamName;
+                currentTeamSelection = 'team2';
+            } else {
+                document.getElementById('team2').value = teamName;
+                currentTeamSelection = 'team1';
+                // Focus on team1 score after selecting both teams
+                document.getElementById('team1Score').focus();
+            }
+        }
+        
+        // Quick add match function
+        async function quickAddMatch(team1, team2, score1, score2) {
+            const matchData = {
+                team1: team1,
+                team2: team2,
+                team1_score: score1,
+                team2_score: score2,
+                match_date: document.getElementById('matchDate').value,
+                conference: 'Big 12'
+            };
+            
+            try {
+                console.log('Quick adding match:', matchData);
+                const response = await fetch('/api/matches', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(matchData)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Match added successfully:', data);
+                    
+                    // Show success notification
+                    const notification = document.createElement('div');
+                    notification.classList.add('alert', 'alert-success', 'alert-dismissible', 'fade', 'show', 'position-fixed');
+                    notification.style.bottom = '20px';
+                    notification.style.right = '20px';
+                    notification.setAttribute('role', 'alert');
+                    notification.innerHTML = `
+                        Match added: ${team1} ${score1}-${score2} ${team2}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    `;
+                    document.body.appendChild(notification);
+                    setTimeout(() => notification.remove(), 3000);
+                    
+                    // Update data
+                    loadTiebreakers();
+                    loadMatches();
+                    updateTeamSelects();
+                } else {
+                    const errorData = await response.text();
+                    console.error('Error response:', errorData);
+                    alert('Error adding match: ' + errorData);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('Error adding match: ' + error.message);
+            }
+        }
+        
+        // Tab switching functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.nav-link');
+            const tabContents = document.querySelectorAll('.tab-pane');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remove active class from all tabs and hide all content
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => {
+                        c.classList.remove('show', 'active');
+                    });
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Show corresponding content
+                    const targetId = tab.getAttribute('data-bs-target');
+                    const targetContent = document.querySelector(targetId);
+                    targetContent.classList.add('show', 'active');
+                });
+            });
+            
+            // Initialize data
+            loadTiebreakers();
+            loadMatches();
+        });
+        
+        // Add new match
+        document.getElementById('matchForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('Form submitted');
+            
+            const matchData = {
+                team1: document.getElementById('team1').value,
+                team2: document.getElementById('team2').value,
+                team1_score: parseInt(document.getElementById('team1Score').value),
+                team2_score: parseInt(document.getElementById('team2Score').value),
+                match_date: document.getElementById('matchDate').value,
+                conference: document.getElementById('conference').value
+            };
+            
+            console.log('Match data:', matchData);
+
+            try {
+                console.log('Sending fetch request...');
+                const response = await fetch('/api/matches', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(matchData)
+                });
+                console.log('Response received:', response);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Match added successfully:', data);
+                    alert('Match added successfully!');
+                    loadTiebreakers();
+                    loadMatches();
+                    updateTeamSelects();
+                    
+                    // Don't reset the form, just update values for the next match
+                    document.getElementById('team1').value = matchData.team1;
+                    document.getElementById('team2').value = matchData.team2;
+                    document.getElementById('team1Score').value = "";
+                    document.getElementById('team2Score').value = "";
+                } else {
+                    const errorData = await response.text();
+                    console.error('Error response:', errorData);
+                    alert('Error adding match: ' + errorData);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('Error adding match: ' + error.message);
+            }
+        });
+
+        // Load tiebreakers and standings
+        async function loadTiebreakers() {
+            try {
+                const response = await fetch('/api/tiebreaker/Big 12');
+                const data = await response.json();
+                const { regular_standings, final_seedings } = data;
+                
+                // Update team selects
+                allTeams = regular_standings.map(team => team.team);
+                updateTeamSelects();
+                
+                // Display regular standings
+                const standingsBody = document.getElementById('standingsBody');
+                standingsBody.innerHTML = '';
+                
+                regular_standings.forEach(team => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${team.team}</td>
+                        <td>${team.matches_played}</td>
+                        <td>${team.wins}</td>
+                        <td>${team.losses}</td>
+                        <td>${(team.win_percentage * 100).toFixed(1)}%</td>
+                    `;
+                    standingsBody.appendChild(row);
+                });
+                
+                // Display final seedings
+                const finalSeedings = document.getElementById('finalSeedings');
+                finalSeedings.innerHTML = '';
+                
+                final_seedings.forEach(team => {
+                    const card = document.createElement('div');
+                    card.classList.add('mb-3', 'p-3', 'border', 'rounded');
+                    
+                    let tiebreakerInfo = '';
+                    if (team.tiebreaker_applied) {
+                        tiebreakerInfo = `<div class="tiebreaker-info">Tiebreaker applied: ${team.tiebreaker_applied}</div>`;
+                        if (team.mini_rr_percentage) {
+                            tiebreakerInfo += `<div class="tiebreaker-info">Mini round-robin win %: ${(team.mini_rr_percentage * 100).toFixed(1)}%</div>`;
+                        }
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <span class="seed-number">${team.seed}</span>
+                            <div>
+                                <div class="fw-bold">${team.team}</div>
+                                <div class="small">${team.wins}-${team.losses} (${(team.win_percentage * 100).toFixed(1)}%)</div>
+                                ${tiebreakerInfo}
+                            </div>
+                        </div>
+                    `;
+                    finalSeedings.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error loading standings');
+            }
+        }
+        
+        // Load matches
+        async function loadMatches() {
+            try {
+                const response = await fetch('/api/matches');
+                const matches = await response.json();
+                const matchesBody = document.getElementById('matchesBody');
+                matchesBody.innerHTML = '';
+                
+                matches.forEach(match => {
+                    const row = document.createElement('tr');
+                    const matchDate = new Date(match.match_date).toLocaleDateString();
+                    row.innerHTML = `
+                        <td>${matchDate}</td>
+                        <td>${match.team1}</td>
+                        <td>${match.team1_score} - ${match.team2_score}</td>
+                        <td>${match.team2}</td>
+                    `;
+                    matchesBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error loading matches');
+            }
+        }
+        
+        // Load head-to-head results
+        async function loadHeadToHead() {
+            const team1 = document.getElementById('h2hTeam1').value;
+            const team2 = document.getElementById('h2hTeam2').value;
+            
+            if (!team1 || !team2) {
+                alert('Please select two teams to compare');
+                return;
+            }
+            
+            if (team1 === team2) {
+                alert('Please select two different teams');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/head-to-head/${team1}/${team2}`);
+                const data = await response.json();
+                const resultDiv = document.getElementById('headToHeadResults');
+                resultDiv.classList.remove('d-none');
+                
+                // Display summary
+                const summaryDiv = document.getElementById('h2hSummary');
+                const team1Wins = data[team1];
+                const team2Wins = data[team2];
+                
+                summaryDiv.innerHTML = `
+                    <div class="row text-center">
+                        <div class="col-md-5">
+                            <h4>${team1}</h4>
+                            <h1>${team1Wins}</h1>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center justify-content-center">
+                            <h3>vs</h3>
+                        </div>
+                        <div class="col-md-5">
+                            <h4>${team2}</h4>
+                            <h1>${team2Wins}</h1>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <h5>Series winner: ${data.winner === 'Tied' ? 'Series Tied' : data.winner}</h5>
+                    </div>
+                `;
+                
+                // Display matches
+                const matchesBody = document.getElementById('h2hMatchesBody');
+                matchesBody.innerHTML = '';
+                
+                data.matches.forEach(match => {
+                    const row = document.createElement('tr');
+                    const matchDate = new Date(match.match_date).toLocaleDateString();
+                    
+                    let style = '';
+                    if (match.team1 === team1 && match.team1_score > match.team2_score) {
+                        style = 'class="table-success"';
+                    } else if (match.team2 === team1 && match.team2_score > match.team1_score) {
+                        style = 'class="table-success"';
+                    } else if (match.team1 === team2 && match.team1_score > match.team2_score) {
+                        style = 'class="table-danger"';
+                    } else if (match.team2 === team2 && match.team2_score > match.team1_score) {
+                        style = 'class="table-danger"';
+                    }
+                    
+                    row.innerHTML = `
+                        <td ${style}>${matchDate}</td>
+                        <td ${style}>${match.team1}</td>
+                        <td ${style}>${match.team1_score} - ${match.team2_score}</td>
+                        <td ${style}>${match.team2}</td>
+                    `;
+                    matchesBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error loading head-to-head results');
+            }
+        }
+        
+        // Update team selects
+        function updateTeamSelects() {
+            const selects = [
+                document.getElementById('h2hTeam1'),
+                document.getElementById('h2hTeam2')
+            ];
+            
+            selects.forEach(select => {
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">Select a team</option>';
+                
+                allTeams.forEach(team => {
+                    const option = document.createElement('option');
+                    option.value = team;
+                    option.textContent = team;
+                    if (team === currentValue) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+            });
+        }
+    </script>
+</body>
+</html> 

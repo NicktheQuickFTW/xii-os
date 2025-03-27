@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Test</title>
+</head>
+<body>
+    <h1>JavaScript Test</h1>
+    <p>Click the button below to test if JavaScript is working:</p>
+    
+    <button onclick="alert('JavaScript is working!')">Test JavaScript</button>
+    
+    <hr>
+    
+    <div>
+        <h2>Direct Link Test</h2>
+        <p>Click to test a direct link to the API:</p>
+        <a href="/api/matches" target="_blank">View Matches JSON</a>
+    </div>
+    
+    <div id="output" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;"></div>
+    
+    <script>
+        // Simple function that doesn't use fetch or async
+        function showMessage() {
+            document.getElementById('output').textContent = 'Button clicked at ' + new Date().toLocaleTimeString();
+        }
+        
+        // Log to console when the page loads
+        console.log('Page loaded at ' + new Date().toLocaleTimeString());
+        document.getElementById('output').textContent = 'Page loaded at ' + new Date().toLocaleTimeString();
+    </script>
+    
+    <button onclick="showMessage()">Update Text</button>
+</body>
+</html> 

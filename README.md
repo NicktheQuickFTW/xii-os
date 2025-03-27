@@ -104,4 +104,35 @@ To contribute to this project:
 
 ## License
 
-Copyright © 2023 Big 12 Conference. All rights reserved. 
+Copyright © 2023 Big 12 Conference. All rights reserved.
+
+## Git Configuration
+
+To configure Git credentials, use the following command:
+```
+git config --global credential.helper store
+```
+
+Or use SSH instead:
+```
+git remote set-url origin git@github.com:nickthequickftw/xii-os.git
+```
+
+To push to the repository, use:
+```
+git push origin main
+```
+
+To pull from the repository, use:
+```
+git pull origin main
+```
+
+## Git Commands
+
+To commit and push your changes, use the following commands:
+```
+git add .
+git commit -m "Your commit message"
+git push origin add-codeowners
+```
