@@ -377,6 +377,10 @@ const transferPortal = require('./modules/transfer-portal');
 app.use('/api/transfer-portal/players', transferPortal.routes.players);
 app.use('/api/transfer-portal/nil-valuations', transferPortal.routes.nilValuations);
 
+// Claude AI Integration - DISABLED TO PREVENT SERVER CRASHES
+// const claudeAI = require('./modules/claude-ai');
+// app.use('/api/claude', claudeAI.routes);
+
 // FireCrawl Integration
 app.get('/api/basketball-transfers', async (req, res) => {
   try {
@@ -413,10 +417,6 @@ app.get('/api/basketball-transfers', async (req, res) => {
     res.status(500).json({ error: 'Failed to extract basketball transfer data' });
   }
 });
-
-// Claude AI Integration
-const claudeAI = require('./modules/claude-ai');
-app.use('/api/claude', claudeAI.routes);
 
 // app.use('/api/content-management', require('./modules/content-management/routes'));
 
