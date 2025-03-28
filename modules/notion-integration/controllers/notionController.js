@@ -6,6 +6,7 @@
 
 const NotionService = require('../services/notionService');
 const NotionModel = require('../models/notion');
+const knex = require('../../../db/knex');
 const winston = require('winston');
 
 // Initialize logger
@@ -278,20 +279,27 @@ exports.queryDatabase = async (req, res) => {
 
 // Sync data from Notion to XII-OS
 exports.syncFromNotion = async (req, res) => {
+  // Use a transaction for database operations
+  const trx = await knex.transaction();
+  
   try {
     const { integration_id, database_id } = req.params;
     const { target_table } = req.body;
     
     if (!target_table) {
+      await trx.rollback();
       return res.status(400).json({
         success: false,
         error: 'Please provide target_table'
       });
     }
     
-    const integration = await NotionModel.findById(integration_id);
+    const integration = await trx('notion_integrations')
+      .where({ id: integration_id })
+      .first();
     
     if (!integration) {
+      await trx.rollback();
       return res.status(404).json({
         success: false,
         error: 'Integration not found'
@@ -314,8 +322,41 @@ exports.syncFromNotion = async (req, res) => {
       };
     });
     
+    // Check if table exists and has necessary columns
+    const hasTable = await trx.schema.hasTable(target_table);
+    if (!hasTable) {
+      await trx.rollback();
+      return res.status(400).json({
+        success: false,
+        error: `Table ${target_table} does not exist`
+      });
+    }
+    
+    // Get list of Notion IDs
+    const notionIds = dataToInsert.map(record => record.notion_id);
+    
+    // Clear existing records with same notion_ids to avoid duplicates
+    const tableInfo = await trx.table(target_table).columnInfo();
+    if (tableInfo.notion_id) {
+      await trx(target_table).whereIn('notion_id', notionIds).del();
+    }
+    
     // Insert into specified table
-    const result = await NotionModel.saveDataToTable(target_table, dataToInsert);
+    let result = [];
+    if (dataToInsert.length > 0) {
+      result = await trx(target_table).insert(dataToInsert).returning('*');
+    }
+    
+    // Update last sync timestamp
+    await trx('notion_integrations')
+      .where({ id: integration_id })
+      .update({ 
+        last_sync: new Date(),
+        updated_at: new Date()
+      });
+    
+    // Commit the transaction
+    await trx.commit();
     
     res.status(200).json({
       success: true,
@@ -324,6 +365,9 @@ exports.syncFromNotion = async (req, res) => {
       data: result
     });
   } catch (error) {
+    // Rollback the transaction
+    await trx.rollback();
+    
     logger.error(`Error syncing from Notion to XII-OS for integration ${req.params.integration_id}:`, error);
     res.status(500).json({
       success: false,
@@ -354,20 +398,71 @@ exports.syncToNotion = async (req, res) => {
       });
     }
     
-    // Get data from XII-OS database
-    const sourceData = await NotionModel.getDataFromTable(source_table, filters || {});
+    // Get data from XII-OS database with a transaction to ensure connection is released
+    const trx = await knex.transaction();
+    let sourceData;
+    
+    try {
+      // Check if table exists
+      const hasTable = await trx.schema.hasTable(source_table);
+      if (!hasTable) {
+        await trx.rollback();
+        return res.status(400).json({
+          success: false,
+          error: `Table ${source_table} does not exist`
+        });
+      }
+      
+      // Get data with filters
+      sourceData = await trx(source_table)
+        .where(filters || {})
+        .select('*');
+      
+      await trx.commit();
+    } catch (dbError) {
+      await trx.rollback();
+      logger.error(`Database error retrieving data from ${source_table}:`, dbError);
+      return res.status(500).json({
+        success: false,
+        error: `Error retrieving data from ${source_table}`
+      });
+    }
     
     const notionService = new NotionService({ token: integration.token });
     
     // Get database schema to format properties correctly
     const schema = await notionService.getDatabaseSchema(database_id);
     
-    // Create pages in Notion
+    // Create pages in Notion with rate limiting to avoid overloading Notion API
     const createdPages = [];
     for (const item of sourceData) {
-      const properties = notionService.convertToNotionProperties(item, schema);
-      const page = await notionService.createPage(database_id, properties);
-      createdPages.push(page);
+      try {
+        const properties = notionService.convertToNotionProperties(item, schema);
+        const page = await notionService.createPage(database_id, properties);
+        createdPages.push(page);
+        
+        // Add a small delay to avoid rate limits
+        await new Promise(resolve => setTimeout(resolve, 250));
+      } catch (pageError) {
+        logger.error(`Error creating Notion page for item ${JSON.stringify(item.id)}:`, pageError);
+        // Continue with the next item
+      }
+    }
+    
+    // Update the integration's last sync timestamp
+    const updateTrx = await knex.transaction();
+    try {
+      await updateTrx('notion_integrations')
+        .where({ id: integration_id })
+        .update({ 
+          last_sync: new Date(),
+          updated_at: new Date()
+        });
+      
+      await updateTrx.commit();
+    } catch (updateError) {
+      await updateTrx.rollback();
+      logger.error(`Error updating last_sync timestamp:`, updateError);
     }
     
     res.status(200).json({

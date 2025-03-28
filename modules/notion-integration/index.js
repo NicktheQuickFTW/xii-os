@@ -7,6 +7,12 @@
 
 const routes = require('./routes');
 const NotionService = require('./services/notionService');
+const scheduledTasks = require('./tasks/scheduledSync');
+
+// Initialize scheduled tasks if enabled
+if (process.env.ENABLE_NOTION_SCHEDULED_SYNC !== 'false') {
+  scheduledTasks.initScheduledTasks();
+}
 
 module.exports = {
   routes,
@@ -15,5 +21,6 @@ module.exports = {
   },
   services: {
     NotionService
-  }
+  },
+  tasks: scheduledTasks
 }; 
