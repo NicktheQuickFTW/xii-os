@@ -5,6 +5,7 @@
  */
 
 const winston = require('winston');
+const compassIntegration = require('./compassIntegration');
 
 // Initialize logger
 const logger = winston.createLogger({
@@ -46,6 +47,11 @@ exports.analyzeSchedule = (schedule) => {
   // Add metrics and team schedules to the result
   analyzedSchedule.metrics = metrics;
   analyzedSchedule.teamSchedules = teamSchedules;
+  
+  // Add COMPASS impact analysis if COMPASS data is available
+  if (schedule.compassData) {
+    analyzedSchedule.compassAnalysis = analyzeCompassImpact(schedule, metrics);
+  }
   
   logger.info('Schedule analysis complete');
   
@@ -440,4 +446,190 @@ function generateTeamSchedules(schedule) {
   });
   
   return teamSchedules;
+}
+
+/**
+ * Analyze how well the schedule aligns with COMPASS evaluations
+ * @param {Object} schedule - Schedule to analyze
+ * @param {Object} metrics - Schedule metrics
+ * @returns {Object} COMPASS impact analysis
+ */
+function analyzeCompassImpact(schedule, metrics) {
+  logger.info('Analyzing COMPASS impact on schedule');
+  
+  const compassData = schedule.compassData;
+  const teamMetrics = metrics.teamSpecific;
+  const travelMetrics = metrics.travel;
+  const televisionMetrics = metrics.television;
+  
+  const teamAnalysis = {};
+  
+  // Analyze COMPASS alignment for each team
+  Object.entries(compassData.programRankings || {}).forEach(([teamId, ranking]) => {
+    // Skip if team metrics are not available
+    if (!teamMetrics[teamId]) return;
+    
+    const teamScore = ranking.compassScore;
+    const teamRank = ranking.overallRank;
+    const teamStrengths = ranking.strengthAreas;
+    const teamWeaknesses = ranking.weaknessAreas;
+    
+    // Calculate expected premium window percentage based on COMPASS score
+    // Higher COMPASS score should correlate with more premium windows
+    const expectedPremiumPct = Math.min(100, teamScore * 0.8);
+    
+    // Calculate actual premium window percentage
+    const teamGames = teamMetrics[teamId].totalGames || 1; // Avoid division by zero
+    const premiumWindows = countPremiumWindows(schedule, teamId);
+    const actualPremiumPct = (premiumWindows / teamGames) * 100;
+    
+    // Calculate premium window alignment
+    const premiumWindowAlignment = actualPremiumPct >= expectedPremiumPct;
+    const premiumWindowDiff = actualPremiumPct - expectedPremiumPct;
+    
+    // Calculate travel burden appropriateness
+    // Lower-ranked teams should have less travel burden
+    const consecutiveAwayGames = travelMetrics.consecutiveAwayGames[teamId] || 0;
+    const backToBackGames = travelMetrics.backToBackGames[teamId] || 0;
+    const travelBurden = (consecutiveAwayGames * 2) + backToBackGames;
+    
+    // Adjust expected travel burden based on COMPASS score
+    // 100 = best team, should handle more travel
+    // 0 = worst team, should have minimal travel
+    const expectedTravelBurden = Math.ceil((teamScore / 100) * 8); // Max expected burden of 8
+    
+    const travelAlignment = travelBurden <= expectedTravelBurden;
+    const travelDiff = travelBurden - expectedTravelBurden;
+    
+    // Calculate home/away balance appropriateness
+    const homeAwayBalance = teamMetrics[teamId].homeAwayRatio || 0.5;
+    const homeAwayAlignment = Math.abs(homeAwayBalance - 0.5) <= 0.1; // Within 10% of perfect balance
+    
+    // Calculate weekend game appropriateness based on fan support
+    // Teams with strong fan support should have more weekend games
+    const hasStrongFanSupport = teamStrengths === 'programPrestige';
+    const weekendPct = teamMetrics[teamId].weekendPercentage || 0;
+    const weekendAlignment = hasStrongFanSupport ? weekendPct >= 40 : true;
+    
+    // Compile team analysis
+    teamAnalysis[teamId] = {
+      compassScore: teamScore,
+      compassRank: teamRank,
+      schedulingAlignment: {
+        premiumTV: {
+          expected: expectedPremiumPct.toFixed(1) + '%',
+          actual: actualPremiumPct.toFixed(1) + '%',
+          isAligned: premiumWindowAlignment,
+          difference: premiumWindowDiff.toFixed(1) + '%'
+        },
+        travel: {
+          expected: expectedTravelBurden,
+          actual: travelBurden,
+          isAligned: travelAlignment,
+          difference: travelDiff
+        },
+        homeAway: {
+          ratio: homeAwayBalance.toFixed(2),
+          isBalanced: homeAwayAlignment
+        },
+        weekend: {
+          percentage: weekendPct.toFixed(1) + '%',
+          isAligned: weekendAlignment,
+          needsWeekendGames: hasStrongFanSupport
+        }
+      },
+      overallAlignment: calculateOverallAlignment(
+        premiumWindowAlignment,
+        travelAlignment,
+        homeAwayAlignment,
+        weekendAlignment
+      )
+    };
+  });
+  
+  // Calculate conference-wide alignment score
+  const alignmentScores = Object.values(teamAnalysis).map(a => a.overallAlignment);
+  const averageAlignment = alignmentScores.reduce((sum, score) => sum + score, 0) / 
+    Math.max(1, alignmentScores.length);
+  
+  return {
+    teamAnalysis,
+    conferenceAlignmentScore: averageAlignment.toFixed(2),
+    date: new Date()
+  };
+}
+
+/**
+ * Count premium TV windows for a team in the schedule
+ * @param {Object} schedule - Schedule to analyze
+ * @param {String} teamId - Team identifier
+ * @returns {Number} Count of premium windows
+ */
+function countPremiumWindows(schedule, teamId) {
+  let premiumCount = 0;
+  
+  // Premium windows by day of week
+  const premiumWindows = {
+    // Sunday = 0, Monday = 1, etc.
+    0: [16, 19], // Sunday 4pm-7pm
+    1: [19, 22], // Monday 7pm-10pm
+    2: [19, 22], // Tuesday 7pm-10pm
+    3: [19, 22], // Wednesday 7pm-10pm
+    4: [19, 22], // Thursday 7pm-10pm
+    5: [19, 22], // Friday 7pm-10pm
+    6: [12, 20]  // Saturday 12pm-8pm
+  };
+  
+  // Check all matchups
+  schedule.weeks.forEach(week => {
+    week.matchups.forEach(matchup => {
+      // Check if this team is playing in the matchup
+      if (matchup.homeTeam === teamId || matchup.awayTeam === teamId) {
+        const dayOfWeek = matchup.date.getDay();
+        const hourOfDay = matchup.date.getHours();
+        
+        // Check if in premium window
+        if (premiumWindows[dayOfWeek] && 
+            hourOfDay >= premiumWindows[dayOfWeek][0] && 
+            hourOfDay <= premiumWindows[dayOfWeek][1]) {
+          premiumCount++;
+        }
+      }
+    });
+  });
+  
+  return premiumCount;
+}
+
+/**
+ * Calculate overall alignment score based on different factors
+ * @param {Boolean} premiumWindowAlignment - Premium TV window alignment
+ * @param {Boolean} travelAlignment - Travel burden alignment
+ * @param {Boolean} homeAwayAlignment - Home/away balance alignment
+ * @param {Boolean} weekendAlignment - Weekend games alignment
+ * @returns {Number} Overall alignment score (0-100)
+ */
+function calculateOverallAlignment(
+  premiumWindowAlignment,
+  travelAlignment,
+  homeAwayAlignment,
+  weekendAlignment
+) {
+  // Weight factors
+  const weights = {
+    premiumWindow: 0.4,
+    travel: 0.3,
+    homeAway: 0.2,
+    weekend: 0.1
+  };
+  
+  // Calculate weighted score
+  let score = 0;
+  
+  if (premiumWindowAlignment) score += weights.premiumWindow * 100;
+  if (travelAlignment) score += weights.travel * 100;
+  if (homeAwayAlignment) score += weights.homeAway * 100;
+  if (weekendAlignment) score += weights.weekend * 100;
+  
+  return score;
 } 
