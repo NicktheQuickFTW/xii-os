@@ -377,6 +377,10 @@ const transferPortal = require('./modules/transfer-portal');
 app.use('/api/transfer-portal/players', transferPortal.routes.players);
 app.use('/api/transfer-portal/nil-valuations', transferPortal.routes.nilValuations);
 
+// Weather Intelligence Module Routes
+const weatherIntelligence = require('./modules/weather-intelligence');
+app.use('/api/weather-intelligence', weatherIntelligence.routes);
+
 // Claude AI Integration - DISABLED TO PREVENT SERVER CRASHES
 // const claudeAI = require('./modules/claude-ai');
 // app.use('/api/claude', claudeAI.routes);
