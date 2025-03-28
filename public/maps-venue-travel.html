@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XII-OS Venue Travel Planning</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: #0c2340;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    .container {
+      display: flex;
+      flex: 1;
+    }
+    .sidebar {
+      width: 320px;
+      padding: 1rem;
+      background-color: #f5f5f5;
+      overflow-y: auto;
+      border-right: 1px solid #ddd;
+    }
+    .map-container {
+      flex: 1;
+      position: relative;
+    }
+    gmp-map {
+      height: 100%;
+      width: 100%;
+    }
+    .options-panel {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: white;
+    }
+    .venue-selector, .travel-details {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: white;
+    }
+    .venue-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .venue-item:hover {
+      background-color: #eee;
+    }
+    .venue-item.active {
+      background-color: #e0f0ff;
+      border-left: 3px solid #0c2340;
+    }
+    .venue-item img {
+      width: 30px;
+      height: 30px;
+      margin-right: 0.5rem;
+    }
+    button {
+      background-color: #0c2340;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #193b68;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    select, input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .route-info {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+      border-left: 3px solid #0c2340;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .stat-card {
+      padding: 1rem;
+      background-color: white;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #0c2340;
+    }
+    .error-message {
+      background-color: #fff0f0;
+      color: #c00;
+      padding: 0.5rem;
+      border-radius: 4px;
+      margin-top: 1rem;
+      display: none;
+    }
+    gmpx-place-picker {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">XII-OS Travel Planning</div>
+    <div>
+      <select id="conference-selector">
+        <option value="big12">Big 12 Conference</option>
+        <option value="sec">SEC</option>
+        <option value="big10">Big 10</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="sidebar">
+      <h2>Venue Selection</h2>
+      <div class="venue-selector">
+        <label for="start-venue">Starting Venue:</label>
+        <select id="start-venue"></select>
+        
+        <label for="destination-venue">Destination Venue:</label>
+        <select id="destination-venue"></select>
+        
+        <div class="options-panel">
+          <label for="travel-mode">Travel Mode:</label>
+          <select id="travel-mode">
+            <option value="DRIVING">Driving</option>
+            <option value="FLYING">Flying</option>
+            <option value="TRANSIT">Transit</option>
+          </select>
+          
+          <button id="calculate-route">Calculate Route</button>
+        </div>
+      </div>
+      
+      <div class="travel-details">
+        <h3>Travel Details</h3>
+        <div id="route-info" class="route-info">
+          Select venues to see travel details
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div>Distance</div>
+            <div id="distance" class="stat-value">-</div>
+          </div>
+          <div class="stat-card">
+            <div>Duration</div>
+            <div id="duration" class="stat-value">-</div>
+          </div>
+        </div>
+        
+        <h3>Custom Location</h3>
+        <gmpx-place-picker id="custom-location"></gmpx-place-picker>
+      </div>
+      
+      <div id="error-message" class="error-message"></div>
+    </div>
+    
+    <div class="map-container">
+      <gmp-map id="map" center="39.0997,-94.5786" zoom="4" map-id="DEMO_MAP_ID"></gmp-map>
+    </div>
+  </div>
+
+  <script>
+    const BIG12_VENUES = [
+      { id: 'byu', name: 'BYU - LaVell Edwards Stadium', location: { lat: 40.2338, lng: -111.6585 }, address: 'Provo, UT' },
+      { id: 'ku', name: 'Kansas - David Booth Stadium', location: { lat: 38.9543, lng: -95.2558 }, address: 'Lawrence, KS' },
+      { id: 'ttu', name: 'Texas Tech - Jones AT&T Stadium', location: { lat: 33.5843, lng: -101.8783 }, address: 'Lubbock, TX' },
+      { id: 'isu', name: 'Iowa State - Jack Trice Stadium', location: { lat: 42.0266, lng: -93.6465 }, address: 'Ames, IA' },
+      { id: 'baylor', name: 'Baylor - McLane Stadium', location: { lat: 31.5493, lng: -97.1467 }, address: 'Waco, TX' },
+      { id: 'cincy', name: 'Cincinnati - Nippert Stadium', location: { lat: 39.1329, lng: -84.5150 }, address: 'Cincinnati, OH' },
+      { id: 'wvu', name: 'West Virginia - Mountaineer Field', location: { lat: 39.6500, lng: -79.9559 }, address: 'Morgantown, WV' },
+      { id: 'ucf', name: 'UCF - FBC Mortgage Stadium', location: { lat: 28.5984, lng: -81.2001 }, address: 'Orlando, FL' },
+      { id: 'arizona', name: 'Arizona - Arizona Stadium', location: { lat: 32.2316, lng: -110.9507 }, address: 'Tucson, AZ' },
+      { id: 'colorado', name: 'Colorado - Folsom Field', location: { lat: 40.0076, lng: -105.2659 }, address: 'Boulder, CO' }
+    ];
+
+    let map;
+    let directionsService;
+    let directionsRenderer;
+    let markers = [];
+    let activeInfoWindow = null;
+
+    async function init() {
+      await customElements.whenDefined('gmp-map');
+      
+      map = document.getElementById('map').innerMap;
+      
+      // Set up directions service
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer({
+        map,
+        suppressMarkers: true
+      });
+      
+      // Initialize place picker
+      await customElements.whenDefined('gmpx-place-picker');
+      const placePicker = document.getElementById('custom-location');
+      placePicker.addEventListener('gmpx-placechange', handlePlaceSelection);
+      
+      // Populate venue dropdowns
+      populateVenueDropdowns();
+      
+      // Set up event listeners
+      document.getElementById('calculate-route').addEventListener('click', calculateRoute);
+      document.getElementById('start-venue').addEventListener('change', updateMarkers);
+      document.getElementById('destination-venue').addEventListener('change', updateMarkers);
+    }
+
+    function populateVenueDropdowns() {
+      const startSelect = document.getElementById('start-venue');
+      const destSelect = document.getElementById('destination-venue');
+      
+      // Clear existing options
+      startSelect.innerHTML = '';
+      destSelect.innerHTML = '';
+      
+      // Add placeholder
+      startSelect.innerHTML = '<option value="">Select starting venue</option>';
+      destSelect.innerHTML = '<option value="">Select destination venue</option>';
+      
+      // Add venues
+      BIG12_VENUES.forEach(venue => {
+        startSelect.innerHTML += `<option value="${venue.id}">${venue.name}</option>`;
+        destSelect.innerHTML += `<option value="${venue.id}">${venue.name}</option>`;
+      });
+    }
+
+    function updateMarkers() {
+      // Clear existing markers
+      markers.forEach(marker => marker.setMap(null));
+      markers = [];
+      
+      // Close any open info windows
+      if (activeInfoWindow) {
+        activeInfoWindow.close();
+        activeInfoWindow = null;
+      }
+      
+      // Get selected venues
+      const startVenueId = document.getElementById('start-venue').value;
+      const destVenueId = document.getElementById('destination-venue').value;
+      
+      if (startVenueId) {
+        const venue = BIG12_VENUES.find(v => v.id === startVenueId);
+        addMarker(venue, 'Start');
+      }
+      
+      if (destVenueId) {
+        const venue = BIG12_VENUES.find(v => v.id === destVenueId);
+        addMarker(venue, 'Destination');
+      }
+      
+      // If both venues are selected, fit bounds
+      if (startVenueId && destVenueId) {
+        const bounds = new google.maps.LatLngBounds();
+        markers.forEach(marker => bounds.extend(marker.getPosition()));
+        map.fitBounds(bounds);
+      }
+    }
+
+    function addMarker(venue, label) {
+      const marker = new google.maps.Marker({
+        position: venue.location,
+        map,
+        title: venue.name,
+        label: label[0]
+      });
+      
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div>
+            <h3>${venue.name}</h3>
+            <p>${venue.address}</p>
+          </div>
+        `
+      });
+      
+      marker.addListener('click', () => {
+        if (activeInfoWindow) {
+          activeInfoWindow.close();
+        }
+        infoWindow.open(map, marker);
+        activeInfoWindow = infoWindow;
+      });
+      
+      markers.push(marker);
+      return marker;
+    }
+
+    async function calculateRoute() {
+      const startVenueId = document.getElementById('start-venue').value;
+      const destVenueId = document.getElementById('destination-venue').value;
+      const travelMode = document.getElementById('travel-mode').value;
+      
+      // Clear error message
+      const errorElement = document.getElementById('error-message');
+      errorElement.style.display = 'none';
+      
+      if (!startVenueId || !destVenueId) {
+        errorElement.textContent = 'Please select both starting and destination venues';
+        errorElement.style.display = 'block';
+        return;
+      }
+      
+      const startVenue = BIG12_VENUES.find(v => v.id === startVenueId);
+      const destVenue = BIG12_VENUES.find(v => v.id === destVenueId);
+      
+      try {
+        // Handle air travel mode separately
+        if (travelMode === 'FLYING') {
+          // For flying, draw a simple line rather than a driving route
+          const flightPath = new google.maps.Polyline({
+            path: [startVenue.location, destVenue.location],
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+          });
+          
+          // Clear previous directions
+          directionsRenderer.setDirections({ routes: [] });
+          
+          // Display the flight path
+          flightPath.setMap(map);
+          
+          // Calculate the air distance
+          const distance = calculateHaversineDistance(
+            startVenue.location.lat, 
+            startVenue.location.lng,
+            destVenue.location.lat,
+            destVenue.location.lng
+          );
+          
+          // Estimate flight time (average 500 mph plus 1 hour for takeoff/landing)
+          const flightTimeHours = distance / 800 + 1;
+          const hours = Math.floor(flightTimeHours);
+          const minutes = Math.round((flightTimeHours - hours) * 60);
+          
+          // Update the travel details
+          document.getElementById('distance').textContent = `${Math.round(distance)} mi`;
+          document.getElementById('duration').textContent = `${hours}h ${minutes}m`;
+          document.getElementById('route-info').innerHTML = `
+            <strong>Flight</strong>: ${startVenue.name} to ${destVenue.name}<br>
+            <strong>Distance</strong>: ${Math.round(distance)} miles<br>
+            <strong>Estimated Flight Time</strong>: ${hours}h ${minutes}m<br>
+            <strong>Note</strong>: Flight time is estimated based on average speeds and includes takeoff/landing time.
+          `;
+          
+          // Add markers
+          updateMarkers();
+          
+          // Set a reasonable zoom to show both locations
+          const bounds = new google.maps.LatLngBounds();
+          bounds.extend(startVenue.location);
+          bounds.extend(destVenue.location);
+          map.fitBounds(bounds);
+          
+          // Remove the flight path after a short delay to avoid memory leaks
+          setTimeout(() => flightPath.setMap(null), 100);
+        } else {
+          // For driving or transit
+          const request = {
+            origin: startVenue.location,
+            destination: destVenue.location,
+            travelMode: travelMode === 'TRANSIT' ? google.maps.TravelMode.TRANSIT : google.maps.TravelMode.DRIVING
+          };
+          
+          const response = await new Promise((resolve, reject) => {
+            directionsService.route(request, (result, status) => {
+              if (status === google.maps.DirectionsStatus.OK) {
+                resolve(result);
+              } else {
+                reject(new Error(status));
+              }
+            });
+          });
+          
+          directionsRenderer.setDirections(response);
+          
+          // Get route details
+          const route = response.routes[0];
+          const leg = route.legs[0];
+          
+          // Update the travel details
+          document.getElementById('distance').textContent = leg.distance.text;
+          document.getElementById('duration').textContent = leg.duration.text;
+          document.getElementById('route-info').innerHTML = `
+            <strong>Route</strong>: ${startVenue.name} to ${destVenue.name}<br>
+            <strong>Distance</strong>: ${leg.distance.text}<br>
+            <strong>Duration</strong>: ${leg.duration.text}<br>
+            <strong>Start Address</strong>: ${leg.start_address}<br>
+            <strong>End Address</strong>: ${leg.end_address}
+          `;
+          
+          // Add markers at the start and end
+          updateMarkers();
+        }
+      } catch (error) {
+        console.error('Error calculating route:', error);
+        errorElement.textContent = `Error calculating route: ${error.message}`;
+        errorElement.style.display = 'block';
+      }
+    }
+
+    function calculateHaversineDistance(lat1, lon1, lat2, lon2) {
+      // Calculate distance using the Haversine formula
+      const R = 3958.8; // Earth's radius in miles
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    function handlePlaceSelection() {
+      const placePicker = document.getElementById('custom-location');
+      const place = placePicker.value;
+      
+      if (!place || !place.location) return;
+      
+      // Clear existing custom marker
+      markers = markers.filter(marker => {
+        if (marker.custom) {
+          marker.setMap(null);
+          return false;
+        }
+        return true;
+      });
+      
+      // Add new marker for the selected place
+      const marker = new google.maps.Marker({
+        position: place.location,
+        map,
+        title: place.displayName || 'Custom Location',
+        label: 'C',
+        custom: true
+      });
+      
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div>
+            <h3>${place.displayName || 'Custom Location'}</h3>
+            <p>${place.formattedAddress || ''}</p>
+          </div>
+        `
+      });
+      
+      marker.addListener('click', () => {
+        if (activeInfoWindow) {
+          activeInfoWindow.close();
+        }
+        infoWindow.open(map, marker);
+        activeInfoWindow = infoWindow;
+      });
+      
+      markers.push(marker);
+      
+      // Pan to the selected location
+      map.panTo(place.location);
+      map.setZoom(14);
+      
+      // Open the info window
+      infoWindow.open(map, marker);
+      activeInfoWindow = infoWindow;
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_a-sk9MpJ2cFUxDaY6XGvDZf4-vw9-nQ&libraries=places&callback=initMap">
+  </script>
+</body>
+</html> 
