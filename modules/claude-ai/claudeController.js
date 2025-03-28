@@ -54,37 +54,43 @@ const generateChatCompletion = async (req, res) => {
       }
     }
     
-    // Add context to system message if available
-    const formattedMessages = [...messages];
-    if (contextData && contextData.system) {
-      // Find the system message and augment it, or add one if not present
-      const systemMessageIndex = formattedMessages.findIndex(msg => msg.role === 'system');
-      if (systemMessageIndex >= 0) {
-        formattedMessages[systemMessageIndex].content = 
-          `${contextData.system}\n\n${formattedMessages[systemMessageIndex].content}`;
-      } else {
-        formattedMessages.unshift({ role: 'system', content: contextData.system });
+    // Extract system message if present, and remove it from the messages array
+    let systemMessage = '';
+    const userMessages = messages.filter(msg => {
+      if (msg.role === 'system') {
+        systemMessage = msg.content;
+        return false;
       }
+      return true;
+    });
+    
+    // Add context to system message if available
+    if (contextData && contextData.system) {
+      systemMessage = systemMessage 
+        ? `${contextData.system}\n\n${systemMessage}`
+        : contextData.system;
     }
     
-    // Call Anthropic API
+    // Call Anthropic API with correct format
     const response = await anthropic.messages.create({
       model,
       max_tokens,
       temperature,
-      messages: formattedMessages,
-      system: formattedMessages.find(m => m.role === 'system')?.content || undefined
+      messages: userMessages,
+      system: systemMessage || undefined
     });
     
     // Update context with new message history if context_id was provided
     if (context_id) {
       // Store the updated messages
       const updatedContext = {
-        messages: [...(contextData?.messages || []), ...messages, response.content]
+        messages: [...(contextData?.messages || []), ...userMessages, response.content]
       };
       
-      // Merge with existing system content if it exists
-      if (contextData?.system) {
+      // Store system message in context if it exists
+      if (systemMessage) {
+        updatedContext.system = systemMessage;
+      } else if (contextData?.system) {
         updatedContext.system = contextData.system;
       }
       
