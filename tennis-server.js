@@ -3,6 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const axios = require('axios');
 const winston = require('winston');
+const fs = require('fs');
+const path = require('path');
 
 // Initialize logger
 const logger = winston.createLogger({
@@ -23,9 +25,6 @@ const logger = winston.createLogger({
 if (!fs.existsSync('logs')) {
   fs.mkdirSync('logs');
 }
-
-const fs = require('fs');
-const path = require('path');
 
 // Sample tennis match data
 const matches = [
