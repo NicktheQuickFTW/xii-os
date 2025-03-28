@@ -1,10 +1,10 @@
 /**
- * Create database tables for FlexTime scheduling system
+ * Create database tables for FlexTime
  */
 exports.up = function(knex) {
   return knex.schema
     // Schedules table - stores schedule metadata
-    .createTable('schedules', function(table) {
+    .createTable('flextime_schedules', function(table) {
       table.increments('id').primary();
       table.string('name').notNullable();
       table.string('sport').notNullable();
@@ -17,10 +17,10 @@ exports.up = function(knex) {
     })
     
     // Schedule matchups table - stores individual games
-    .createTable('schedule_matchups', function(table) {
+    .createTable('flextime_matchups', function(table) {
       table.increments('id').primary();
       table.integer('schedule_id').notNullable()
-           .references('id').inTable('schedules').onDelete('CASCADE');
+           .references('id').inTable('flextime_schedules').onDelete('CASCADE');
       table.string('home_team').notNullable();
       table.string('away_team').notNullable();
       table.integer('week').notNullable();
@@ -37,7 +37,7 @@ exports.up = function(knex) {
     })
     
     // Configuration table - stores scheduling configurations
-    .createTable('schedule_configurations', function(table) {
+    .createTable('flextime_configurations', function(table) {
       table.increments('id').primary();
       table.string('name').notNullable();
       table.string('sport').notNullable();
@@ -52,10 +52,10 @@ exports.up = function(knex) {
     })
     
     // Teams in configuration
-    .createTable('config_teams', function(table) {
+    .createTable('flextime_teams', function(table) {
       table.increments('id').primary();
       table.integer('config_id').notNullable()
-           .references('id').inTable('schedule_configurations').onDelete('CASCADE');
+           .references('id').inTable('flextime_configurations').onDelete('CASCADE');
       table.string('team_id').notNullable();
       table.string('name').notNullable();
       table.string('location');
@@ -72,10 +72,10 @@ exports.up = function(knex) {
     })
     
     // Constraints in configuration
-    .createTable('config_constraints', function(table) {
+    .createTable('flextime_constraints', function(table) {
       table.increments('id').primary();
       table.integer('config_id').notNullable()
-           .references('id').inTable('schedule_configurations').onDelete('CASCADE');
+           .references('id').inTable('flextime_configurations').onDelete('CASCADE');
       table.string('team_id').notNullable();
       table.string('type').notNullable();
       table.string('description');
@@ -89,12 +89,12 @@ exports.up = function(knex) {
       table.index(['config_id', 'team_id']);
     })
     
-    // Schedule optimization jobs
-    .createTable('schedule_jobs', function(table) {
+    // FlexTime jobs
+    .createTable('flextime_jobs', function(table) {
       table.increments('id').primary();
       table.string('job_type').notNullable();
-      table.integer('source_schedule_id').references('id').inTable('schedules');
-      table.integer('output_schedule_id').references('id').inTable('schedules');
+      table.integer('source_schedule_id').references('id').inTable('flextime_schedules');
+      table.integer('output_schedule_id').references('id').inTable('flextime_schedules');
       table.jsonb('parameters');
       table.string('status').defaultTo('pending');
       table.text('result');
@@ -110,10 +110,10 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return knex.schema
-    .dropTableIfExists('schedule_jobs')
-    .dropTableIfExists('config_constraints')
-    .dropTableIfExists('config_teams')
-    .dropTableIfExists('schedule_configurations')
-    .dropTableIfExists('schedule_matchups')
-    .dropTableIfExists('schedules');
+    .dropTableIfExists('flextime_jobs')
+    .dropTableIfExists('flextime_constraints')
+    .dropTableIfExists('flextime_teams')
+    .dropTableIfExists('flextime_configurations')
+    .dropTableIfExists('flextime_matchups')
+    .dropTableIfExists('flextime_schedules');
 }; 

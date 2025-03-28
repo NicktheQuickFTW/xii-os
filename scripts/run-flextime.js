@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
 /**
- * FlexTime Scheduling Engine Runner
+ * FlexTime Engine Runner
  * 
- * This script provides a simple way to run the scheduling engine from the command line.
+ * This script provides a simple way to run the FlexTime Engine from the command line.
  */
 
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-const schedulingEngine = require('../modules/athletic-competition/scheduling-engine');
+const flextimeEngine = require('../modules/athletic-competition/flextime-engine');
 
 // Sample configuration for different sports
 const sampleConfigs = {
@@ -109,14 +109,14 @@ const outputPath = args[2] || `./output/${sport}-schedule.json`; // Default outp
 
 // Print usage if help requested
 if (sport === 'help' || sport === '--help' || sport === '-h') {
-  console.log('Usage: node run-scheduling-engine.js [sport] [action] [outputPath]');
+  console.log('Usage: node run-flextime.js [sport] [action] [outputPath]');
   console.log('');
   console.log('Available sports: basketball, football');
   console.log('Available actions: generate, analyze, optimize');
   console.log('');
   console.log('Examples:');
-  console.log('  node run-scheduling-engine.js basketball generate ./output/basketball-schedule.json');
-  console.log('  node run-scheduling-engine.js football optimize ./output/football-schedule.json');
+  console.log('  node run-flextime.js basketball generate ./output/basketball-schedule.json');
+  console.log('  node run-flextime.js football optimize ./output/football-schedule.json');
   console.log('');
   process.exit(0);
 }
@@ -129,7 +129,7 @@ if (!fs.existsSync(outputDir)) {
 
 // Main function
 async function main() {
-  console.log(`===== FLEXTIME SCHEDULING ENGINE - ${sport.toUpperCase()} =====`);
+  console.log(`===== FLEXTIME ENGINE - ${sport.toUpperCase()} =====`);
   
   // Get configuration
   const config = sampleConfigs[sport];
@@ -173,7 +173,7 @@ async function main() {
 async function generateSchedule(config, outputPath) {
   console.log(`Generating ${config.sport} schedule...`);
   
-  const result = await schedulingEngine.generateSchedule({
+  const result = await flextimeEngine.generateSchedule({
     ...config,
     useClaudeAI: true,
     saveToDatabase: false // We'll save to a file instead
@@ -205,7 +205,7 @@ async function analyzeSchedule(schedulePath) {
   const schedule = JSON.parse(fs.readFileSync(schedulePath, 'utf8'));
   
   // Get analysis
-  const analysisResult = await schedulingEngine.getClaudeAnalysis(schedule);
+  const analysisResult = await flextimeEngine.getClaudeAnalysis(schedule);
   
   if (!analysisResult.success) {
     throw new Error(`Failed to analyze schedule: ${analysisResult.error}`);
@@ -248,7 +248,7 @@ async function optimizeSchedule(schedulePath) {
   const schedule = JSON.parse(fs.readFileSync(schedulePath, 'utf8'));
   
   // Optimize
-  const optimizedSchedule = await schedulingEngine.optimizeExistingSchedule(
+  const optimizedSchedule = await flextimeEngine.optimizeExistingSchedule(
     schedule,
     {
       travelEfficiency: 1.5,

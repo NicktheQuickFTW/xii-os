@@ -1,10 +1,10 @@
 /**
- * FlexTime Scheduling Engine Test Script
+ * FlexTime Engine Test Script
  * 
- * This script tests the FlexTime scheduling engine with Cloud database and Claude AI integration
+ * This script tests the FlexTime Engine with Cloud database and Claude AI integration
  */
 
-const schedulingEngine = require('../modules/athletic-competition/scheduling-engine');
+const flextimeEngine = require('../modules/athletic-competition/flextime-engine');
 
 // Configuration for a simple basketball schedule
 const testConfig = {
@@ -77,14 +77,14 @@ const testConfig = {
  * Run full integration test
  */
 async function runIntegrationTest() {
-  console.log('===== FLEXTIME SCHEDULING ENGINE TEST =====');
+  console.log('===== FLEXTIME ENGINE TEST =====');
   console.log('Testing with cloud database and Claude AI integration');
   console.log('');
   
   try {
     // Step 1: Save configuration to database
     console.log('Step 1: Saving configuration to database...');
-    const configResult = await schedulingEngine.saveConfigurationToDatabase(
+    const configResult = await flextimeEngine.saveConfigurationToDatabase(
       testConfig, 
       'Test Basketball Configuration'
     );
@@ -94,7 +94,7 @@ async function runIntegrationTest() {
     
     // Step 2: Generate schedule with Claude AI optimization
     console.log('Step 2: Generating schedule with Claude AI optimization...');
-    const scheduleResult = await schedulingEngine.generateSchedule({
+    const scheduleResult = await flextimeEngine.generateSchedule({
       ...testConfig,
       useClaudeAI: true,
       saveToDatabase: true,
@@ -114,7 +114,7 @@ async function runIntegrationTest() {
     
     // Step 3: Analyze schedule with Claude AI
     console.log('Step 3: Analyzing schedule with Claude AI...');
-    const analysisResult = await schedulingEngine.getClaudeAnalysis(schedule);
+    const analysisResult = await flextimeEngine.getClaudeAnalysis(schedule);
     
     if (!analysisResult.success) {
       throw new Error(`Failed to analyze schedule: ${analysisResult.error}`);
@@ -128,7 +128,7 @@ async function runIntegrationTest() {
     
     // Step 4: Optimize the schedule further
     console.log('Step 4: Optimizing schedule further...');
-    const optimizationResult = await schedulingEngine.optimizeExistingSchedule(
+    const optimizationResult = await flextimeEngine.optimizeExistingSchedule(
       schedule,
       {
         travelEfficiency: 1.5,
@@ -146,7 +146,7 @@ async function runIntegrationTest() {
     
     // Step 5: List all schedules and configurations
     console.log('Step 5: Listing saved schedules and configurations...');
-    const schedulesResult = await schedulingEngine.listSchedules({ sport: 'basketball' });
+    const schedulesResult = await flextimeEngine.listSchedules({ sport: 'basketball' });
     
     if (!schedulesResult.success) {
       throw new Error(`Failed to list schedules: ${schedulesResult.error}`);
@@ -154,7 +154,7 @@ async function runIntegrationTest() {
     
     console.log(`Found ${schedulesResult.schedules.length} basketball schedules in database`);
     
-    const configurationsResult = await schedulingEngine.listConfigurations({ sport: 'basketball' });
+    const configurationsResult = await flextimeEngine.listConfigurations({ sport: 'basketball' });
     
     if (!configurationsResult.success) {
       throw new Error(`Failed to list configurations: ${configurationsResult.error}`);

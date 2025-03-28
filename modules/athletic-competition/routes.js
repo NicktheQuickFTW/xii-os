@@ -8,26 +8,26 @@ const express = require('express');
 const router = express.Router();
 const controllers = require('./controllers');
 
-// Schedule generation
-router.post('/schedules', controllers.generateSchedule);
-router.get('/schedules', controllers.listSchedules);
-router.get('/schedules/:scheduleId', controllers.loadScheduleFromDatabase);
+// FlexTime routes
+router.post('/flextime', controllers.generateSchedule);
+router.get('/flextime', controllers.listSchedules);
+router.get('/flextime/:scheduleId', controllers.loadScheduleFromDatabase);
 
-// Schedule validation and optimization
-router.post('/schedules/validate', controllers.validateSchedule);
-router.post('/schedules/optimize', controllers.optimizeSchedule);
-router.post('/schedules/analyze', controllers.getClaudeAnalysis);
+// FlexTime operations
+router.post('/flextime/validate', controllers.validateSchedule);
+router.post('/flextime/optimize', controllers.optimizeSchedule);
+router.post('/flextime/analyze', controllers.getClaudeAnalysis);
 
 // Database operations
-router.post('/schedules/save', controllers.saveScheduleToDatabase);
+router.post('/flextime/save', controllers.saveScheduleToDatabase);
 router.post('/configurations', controllers.saveConfigurationToDatabase);
 router.get('/configurations', controllers.listConfigurations);
 router.get('/configurations/:configId', controllers.loadConfigurationFromDatabase);
 
-// Handle scheduling engine requests
-router.post('/scheduling-engine/generate', controllers.generateSchedule);
-router.post('/scheduling-engine/optimize', controllers.optimizeSchedule);
-router.post('/scheduling-engine/validate', controllers.validateSchedule);
+// FlexTime engine direct calls
+router.post('/flextime-engine/generate', controllers.generateSchedule);
+router.post('/flextime-engine/optimize', controllers.optimizeSchedule);
+router.post('/flextime-engine/validate', controllers.validateSchedule);
 
 // Postseason-related routes
 router.get('/postseason', controllers.getPostseasonProjections);

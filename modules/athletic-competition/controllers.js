@@ -3,7 +3,7 @@
  */
 
 const winston = require('winston');
-const schedulingEngine = require('./scheduling-engine');
+const flextimeEngine = require('./flextime-engine');
 const postseasonOptimization = require('./postseason-optimization');
 const conflictResolution = require('./conflict-resolution');
 
@@ -107,7 +107,7 @@ exports.generateSchedule = async (req, res) => {
     };
     
     // Generate schedule
-    const result = await schedulingEngine.generateSchedule(params);
+    const result = await flextimeEngine.generateSchedule(params);
     
     if (result.success) {
       res.status(200).json(result);
@@ -130,7 +130,7 @@ exports.validateSchedule = (req, res) => {
     logger.info('Validating schedule');
     
     // Validate schedule
-    const validation = schedulingEngine.validateSchedule(req.body.schedule);
+    const validation = flextimeEngine.validateSchedule(req.body.schedule);
     
     res.status(200).json(validation);
   } catch (error) {
@@ -157,7 +157,7 @@ exports.optimizeSchedule = async (req, res) => {
     };
     
     // Optimize schedule
-    const optimized = await schedulingEngine.optimizeExistingSchedule(
+    const optimized = await flextimeEngine.optimizeExistingSchedule(
       req.body.schedule, 
       factors
     );
@@ -186,7 +186,7 @@ exports.saveScheduleToDatabase = async (req, res) => {
     }
     
     // Save to database
-    const result = await schedulingEngine.saveScheduleToDatabase(
+    const result = await flextimeEngine.saveScheduleToDatabase(
       req.body.schedule,
       req.body.name || `${req.body.schedule.sport} Schedule`
     );
@@ -208,7 +208,7 @@ exports.loadScheduleFromDatabase = async (req, res) => {
     logger.info('Loading schedule from database', { scheduleId: req.params.scheduleId });
     
     // Load from database
-    const result = await schedulingEngine.loadScheduleFromDatabase(req.params.scheduleId);
+    const result = await flextimeEngine.loadScheduleFromDatabase(req.params.scheduleId);
     
     res.status(200).json(result);
   } catch (error) {
@@ -234,7 +234,7 @@ exports.getClaudeAnalysis = async (req, res) => {
     }
     
     // Get analysis from Claude
-    const analysis = await schedulingEngine.getClaudeAnalysis(req.body.schedule);
+    const analysis = await flextimeEngine.getClaudeAnalysis(req.body.schedule);
     
     res.status(200).json(analysis);
   } catch (error) {
@@ -260,7 +260,7 @@ exports.saveConfigurationToDatabase = async (req, res) => {
     }
     
     // Save to database
-    const result = await schedulingEngine.saveConfigurationToDatabase(
+    const result = await flextimeEngine.saveConfigurationToDatabase(
       req.body.config,
       req.body.name || `${req.body.config.sport} Configuration`
     );
@@ -282,7 +282,7 @@ exports.loadConfigurationFromDatabase = async (req, res) => {
     logger.info('Loading configuration from database', { configId: req.params.configId });
     
     // Load from database
-    const result = await schedulingEngine.loadConfigurationFromDatabase(req.params.configId);
+    const result = await flextimeEngine.loadConfigurationFromDatabase(req.params.configId);
     
     res.status(200).json(result);
   } catch (error) {
@@ -306,7 +306,7 @@ exports.listSchedules = async (req, res) => {
     if (req.query.season) filters.season = req.query.season;
     
     // Get schedules from database
-    const result = await schedulingEngine.listSchedules(filters);
+    const result = await flextimeEngine.listSchedules(filters);
     
     res.status(200).json(result);
   } catch (error) {
@@ -329,7 +329,7 @@ exports.listConfigurations = async (req, res) => {
     if (req.query.sport) filters.sport = req.query.sport;
     
     // Get configurations from database
-    const result = await schedulingEngine.listConfigurations(filters);
+    const result = await flextimeEngine.listConfigurations(filters);
     
     res.status(200).json(result);
   } catch (error) {
