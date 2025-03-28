@@ -381,6 +381,10 @@ app.use('/api/transfer-portal/nil-valuations', transferPortal.routes.nilValuatio
 const weatherIntelligence = require('./modules/weather-intelligence');
 app.use('/api/weather-intelligence', weatherIntelligence.routes);
 
+// Notion Integration Module Routes
+const notionIntegration = require('./modules/notion-integration');
+app.use('/api/notion', notionIntegration.routes);
+
 // Claude AI Integration - DISABLED TO PREVENT SERVER CRASHES
 // const claudeAI = require('./modules/claude-ai');
 // app.use('/api/claude', claudeAI.routes);

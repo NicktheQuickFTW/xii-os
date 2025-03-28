@@ -18,6 +18,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@mendable/firecrawl": "^1.20.1",
+    "@notionhq/client": "^2.3.0",
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.3",
