@@ -6,6 +6,7 @@
 
 const winston = require('winston');
 const compass = require('./compass');
+const compassAI = require('./compassAI');
 const dbAdapter = require('./dbAdapter');
 
 // Initialize logger
@@ -26,23 +27,42 @@ const logger = winston.createLogger({
 /**
  * Evaluate all programs in a conference using COMPASS
  * @param {String} conferenceId - Conference identifier
+ * @param {Object} options - Evaluation options
  * @returns {Object} Conference COMPASS evaluations
  */
-exports.evaluateConference = async (conferenceId) => {
+exports.evaluateConference = async (conferenceId, options = {}) => {
   logger.info(`Evaluating conference ${conferenceId} using COMPASS`);
   
   try {
+    // Set default options
+    const evaluationOptions = {
+      useAdaptiveWeights: options.useAdaptiveWeights || false,
+      includePredictions: options.includePredictions || false,
+      includeUnstructuredData: options.includeUnstructuredData || false,
+      ...options
+    };
+    
     // Fetch all programs in the conference
     const programs = await dbAdapter.getConferencePrograms(conferenceId);
     
+    // If using adaptive weights, get historical data
+    let historicalData = [];
+    if (evaluationOptions.useAdaptiveWeights) {
+      logger.info('Fetching historical data for adaptive weights');
+      historicalData = await fetchHistoricalData(conferenceId);
+      evaluationOptions.historicalData = historicalData;
+    }
+    
     // Fetch data for each program
     const programsData = await Promise.all(
-      programs.map(program => fetchProgramData(program.id))
+      programs.map(program => fetchProgramData(program.id, evaluationOptions))
     );
     
     // Calculate COMPASS scores for each program
-    const compassEvaluations = programsData.map(programData => 
-      compass.calculateCompassScore(programData)
+    const compassEvaluations = await Promise.all(
+      programsData.map(programData => 
+        compass.calculateCompassScore(programData, evaluationOptions)
+      )
     );
     
     // Compare programs
@@ -53,7 +73,8 @@ exports.evaluateConference = async (conferenceId) => {
       conferenceId,
       evaluationDate: new Date(),
       individualEvaluations: compassEvaluations,
-      comparisonResults
+      comparisonResults,
+      evaluationOptions
     };
   } catch (error) {
     logger.error(`Error evaluating conference: ${error.message}`, { error });
@@ -62,11 +83,36 @@ exports.evaluateConference = async (conferenceId) => {
 };
 
 /**
+ * Fetch historical data for adaptive weight modeling
+ * @param {String} conferenceId - Conference identifier
+ * @returns {Array} Historical evaluation and outcome data
+ */
+async function fetchHistoricalData(conferenceId) {
+  try {
+    // Fetch historical COMPASS evaluations and outcomes for this conference
+    // This would be populated from database entries
+    const historicalData = await dbAdapter.getHistoricalCompassData(conferenceId);
+    
+    if (!historicalData || historicalData.length === 0) {
+      logger.warn(`No historical data found for conference ${conferenceId}`);
+      return [];
+    }
+    
+    logger.info(`Found ${historicalData.length} historical data points for conference ${conferenceId}`);
+    return historicalData;
+  } catch (error) {
+    logger.error(`Error fetching historical data: ${error.message}`, { error });
+    return [];
+  }
+}
+
+/**
  * Fetch all necessary data for a program's COMPASS evaluation
  * @param {String} programId - Program identifier
+ * @param {Object} options - Evaluation options
  * @returns {Object} Comprehensive program data
  */
-async function fetchProgramData(programId) {
+async function fetchProgramData(programId, options = {}) {
   logger.info(`Fetching data for program ${programId}`);
   
   try {
@@ -88,6 +134,12 @@ async function fetchProgramData(programId) {
     // Fetch academic data
     const academicData = await fetchAcademicData(programId);
     
+    // Fetch and process unstructured data if option is enabled
+    let unstructuredData = {};
+    if (options.includeUnstructuredData) {
+      unstructuredData = await fetchAndProcessUnstructuredData(programId);
+    }
+    
     // Compile complete program data
     return {
       id: programId,
@@ -97,11 +149,60 @@ async function fetchProgramData(programId) {
       roster: rosterData,
       infrastructure: infrastructureData,
       prestige: prestigeData,
-      academic: academicData
+      academic: academicData,
+      unstructured: unstructuredData
     };
   } catch (error) {
     logger.error(`Error fetching program data: ${error.message}`, { error, programId });
     throw error;
+  }
+}
+
+/**
+ * Fetch and process unstructured data for a program
+ * @param {String} programId - Program identifier
+ * @returns {Object} Processed unstructured data
+ */
+async function fetchAndProcessUnstructuredData(programId) {
+  logger.info(`Processing unstructured data for program ${programId}`);
+  
+  try {
+    // Fetch various types of unstructured data
+    const mediaReports = await dbAdapter.fetchMediaReports(programId);
+    const socialMediaData = await dbAdapter.fetchSocialMediaData(programId);
+    const recruitingNarratives = await dbAdapter.fetchRecruitingNarratives(programId);
+    
+    // Process each type of data with AI
+    const processedData = {};
+    
+    if (mediaReports && mediaReports.length > 0) {
+      const combinedReport = mediaReports.join('\n\n');
+      const processedMedia = await compass.processUnstructuredData('mediaReport', combinedReport);
+      if (processedMedia.success) {
+        processedData.mediaReports = processedMedia.data;
+      }
+    }
+    
+    if (socialMediaData && socialMediaData.length > 0) {
+      const combinedSocial = socialMediaData.join('\n\n');
+      const processedSocial = await compass.processUnstructuredData('socialMedia', combinedSocial);
+      if (processedSocial.success) {
+        processedData.socialMedia = processedSocial.data;
+      }
+    }
+    
+    if (recruitingNarratives && recruitingNarratives.length > 0) {
+      const combinedRecruiting = recruitingNarratives.join('\n\n');
+      const processedRecruiting = await compass.processUnstructuredData('recruitingData', combinedRecruiting);
+      if (processedRecruiting.success) {
+        processedData.recruiting = processedRecruiting.data;
+      }
+    }
+    
+    return processedData;
+  } catch (error) {
+    logger.error(`Error processing unstructured data: ${error.message}`, { error, programId });
+    return {};
   }
 }
 
@@ -267,7 +368,9 @@ exports.enhanceScheduleWithCompass = (scheduleOptions, compassEvaluations) => {
         weaknessAreas: getTopWeaknessArea(evaluation.componentBreakdown),
         overallRank: compassEvaluations.comparisonResults.rankings.find(
           r => r.programName === evaluation.programName
-        )?.rank || 0
+        )?.rank || 0,
+        // Include AI predictions if available
+        predictions: evaluation.predictions || null
       };
     });
     
@@ -488,5 +591,81 @@ exports.getLatestCompassEvaluation = async (conferenceId) => {
   } catch (error) {
     logger.error(`Error retrieving COMPASS evaluation: ${error.message}`, { error });
     return null;
+  }
+};
+
+/**
+ * Analyze past season data and generate COMPASS system improvements
+ * @param {String} season - Past season to analyze
+ * @returns {Promise<Object>} Analysis and improvement recommendations
+ */
+exports.analyzeSystemPerformance = async (season) => {
+  logger.info(`Analyzing COMPASS performance for season ${season}`);
+  
+  try {
+    // Use AI to analyze prediction accuracy
+    const analysisResult = await compass.analyzeAccuracy(season);
+    
+    if (!analysisResult.success) {
+      return {
+        success: false,
+        error: analysisResult.error || 'Analysis failed'
+      };
+    }
+    
+    // Store analysis results for future reference
+    await dbAdapter.storeCompassAnalysis(analysisResult);
+    
+    return {
+      success: true,
+      analysis: analysisResult.analysis,
+      season,
+      timestamp: new Date().toISOString()
+    };
+  } catch (error) {
+    logger.error(`Error analyzing system performance: ${error.message}`, { error });
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+};
+
+/**
+ * Record actual season outcomes for a program to improve COMPASS
+ * @param {String} programId - Program identifier
+ * @param {String} season - Season identifier
+ * @param {Object} actualOutcomes - Actual outcomes for the season
+ * @returns {Promise<boolean>} Success indicator
+ */
+exports.recordActualOutcomes = async (programId, season, actualOutcomes) => {
+  logger.info(`Recording actual outcomes for program ${programId} (${season})`);
+  
+  try {
+    // Get the original COMPASS evaluation
+    const compassEvaluation = await dbAdapter.getCompassEvaluation(programId, season);
+    
+    if (!compassEvaluation) {
+      logger.error(`No COMPASS evaluation found for program ${programId} (${season})`);
+      return false;
+    }
+    
+    // Store evaluation and outcomes for learning
+    const storeResult = await compass.storeEvaluationForLearning(
+      compassEvaluation,
+      {
+        season,
+        ...actualOutcomes
+      }
+    );
+    
+    if (storeResult) {
+      logger.info(`Successfully recorded outcomes for program ${programId} (${season})`);
+    }
+    
+    return storeResult;
+  } catch (error) {
+    logger.error(`Error recording actual outcomes: ${error.message}`, { error });
+    return false;
   }
 }; 

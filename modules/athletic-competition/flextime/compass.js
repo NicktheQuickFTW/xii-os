@@ -6,6 +6,7 @@
  */
 
 const winston = require('winston');
+const compassAI = require('./compassAI');
 
 // Initialize logger
 const logger = winston.createLogger({
@@ -25,10 +26,36 @@ const logger = winston.createLogger({
 /**
  * Calculate COMPASS score for a program
  * @param {Object} programData - Program data for evaluation
+ * @param {Object} options - Evaluation options
  * @returns {Object} COMPASS evaluation results
  */
-exports.calculateCompassScore = (programData) => {
+exports.calculateCompassScore = async (programData, options = {}) => {
   logger.info(`Calculating COMPASS score for program: ${programData.name}`);
+  
+  // Check if we should use adaptive weights from ML
+  let componentWeights = {
+    onCourt: 0.35,           // 35%
+    roster: 0.25,             // 25%
+    infrastructure: 0.20, // 20%
+    prestige: 0.15,         // 15%
+    academic: 0.05          // 5%
+  };
+  
+  if (options.useAdaptiveWeights && options.historicalData) {
+    try {
+      logger.info('Using ML to optimize component weights');
+      const weightResult = await compassAI.optimizeComponentWeights(options.historicalData);
+      
+      if (weightResult.success) {
+        componentWeights = weightResult.weights;
+        logger.info('Successfully applied AI-optimized weights', { weights: componentWeights });
+      } else {
+        logger.warn('Failed to optimize weights, using defaults', { error: weightResult.error });
+      }
+    } catch (error) {
+      logger.error('Error during weight optimization', { error: error.message });
+    }
+  }
   
   // Calculate component scores
   const onCourtScore = calculateOnCourtPerformance(programData);
@@ -39,11 +66,11 @@ exports.calculateCompassScore = (programData) => {
   
   // Apply component weights
   const weightedScores = {
-    onCourt: onCourtScore * 0.35,           // 35%
-    roster: rosterScore * 0.25,             // 25%
-    infrastructure: infrastructureScore * 0.20, // 20%
-    prestige: prestigeScore * 0.15,         // 15%
-    academic: academicScore * 0.05          // 5%
+    onCourt: onCourtScore * componentWeights.onCourt,
+    roster: rosterScore * componentWeights.roster,
+    infrastructure: infrastructureScore * componentWeights.infrastructure,
+    prestige: prestigeScore * componentWeights.prestige,
+    academic: academicScore * componentWeights.academic
   };
   
   // Calculate total score
@@ -155,7 +182,7 @@ exports.calculateCompassScore = (programData) => {
     }
   };
   
-  // Create and return the COMPASS evaluation
+  // Create the COMPASS evaluation
   const compassEvaluation = {
     programName: programData.name,
     totalScore: totalScore,
@@ -164,6 +191,23 @@ exports.calculateCompassScore = (programData) => {
     componentBreakdown: componentBreakdown,
     evaluationDate: new Date()
   };
+  
+  // Add ML-based outcome predictions if requested
+  if (options.includePredictions) {
+    try {
+      logger.info('Generating AI-based outcome predictions');
+      const predictionsResult = await compassAI.predictProgramOutcomes(programData, compassEvaluation);
+      
+      if (predictionsResult.success) {
+        compassEvaluation.predictions = predictionsResult.predictions;
+        logger.info('Successfully added AI-generated predictions');
+      } else {
+        logger.warn('Failed to generate predictions', { error: predictionsResult.error });
+      }
+    } catch (error) {
+      logger.error('Error during prediction generation', { error: error.message });
+    }
+  }
   
   logger.info(`COMPASS evaluation complete for ${programData.name}: ${totalScore.toFixed(2)}`);
   
@@ -818,8 +862,205 @@ function calculatePlayerImprovementScore(yearOverYearImprovement = {}) {
  * @returns {Number} Component score (0-100)
  */
 function calculateProgramInfrastructure(programData) {
-  // Placeholder for implementation
-  return 75; // Mock score for now
+  // Extract relevant data from programData
+  const { coaching, facilities, support } = programData.infrastructure || {};
+  
+  // Calculate Coaching Assets (8% of 20%)
+  const coachingScore = calculateCoachingAssets(coaching);
+  
+  // Calculate Facilities & Resources (7% of 20%)
+  const facilitiesScore = calculateFacilitiesResources(facilities);
+  
+  // Calculate Program Support (5% of 20%)
+  const supportScore = calculateProgramSupport(support);
+  
+  // Apply internal component weights
+  // Coaching Assets: 8/20 = 40% of component weight
+  // Facilities & Resources: 7/20 = 35% of component weight
+  // Program Support: 5/20 = 25% of component weight
+  const weightedScore = (
+    (coachingScore * 0.40) +
+    (facilitiesScore * 0.35) +
+    (supportScore * 0.25)
+  );
+  
+  return weightedScore;
+}
+
+/**
+ * Calculate Coaching Assets (8% of total)
+ * @param {Object} coaching - Coaching data
+ * @returns {Number} Subcomponent score (0-100)
+ */
+function calculateCoachingAssets(coaching = {}) {
+  // Define weights within this subcomponent
+  const weights = {
+    headCoachSuccessRate: 0.50, // 4% of total (4/8 of this component)
+    staffStability: 0.25,        // 2% of total
+    tacticalAdaptability: 0.25   // 2% of total
+  };
+  
+  // Calculate metrics or use defaults if data not available
+  const headCoachSuccessRate = calculateHeadCoachSuccessRate(
+    coaching.headCoachWins,
+    coaching.headCoachLosses,
+    coaching.headCoachTournamentAppearances,
+    coaching.headCoachConferenceChampionships
+  );
+  
+  const staffStability = calculateStaffStability(
+    coaching.assistantRetentionRate,
+    coaching.staffTenureYears
+  );
+  
+  const tacticalAdaptability = calculateTacticalAdaptability(
+    coaching.adaptabilityRating,
+    coaching.gameAdjustments
+  );
+  
+  // Calculate weighted score
+  const weightedScore = (
+    (headCoachSuccessRate * weights.headCoachSuccessRate) +
+    (staffStability * weights.staffStability) +
+    (tacticalAdaptability * weights.tacticalAdaptability)
+  );
+  
+  return weightedScore;
+}
+
+/**
+ * Calculate Facilities & Resources (7% of total)
+ * @param {Object} facilities - Facilities data
+ * @returns {Number} Subcomponent score (0-100)
+ */
+function calculateFacilitiesResources(facilities = {}) {
+  // Define weights within this subcomponent
+  const weights = {
+    practiceFacility: 0.29, // 2% of total (2/7 of this component)
+    arenaQuality: 0.42,      // 3% of total
+    technologyIntegration: 0.29 // 2% of total
+  };
+  
+  // Calculate metrics or use defaults if data not available
+  const practiceFacility = calculatePracticeFacilityScore(
+    facilities.practiceFacilitySize,
+    facilities.practiceFacilityAge,
+    facilities.practiceFacilityAmenities
+  );
+  
+  const arenaQuality = calculateArenaQualityScore(
+    facilities.arenaCapacity,
+    facilities.arenaAge,
+    facilities.arenaRenovations,
+    facilities.arenaAmenities
+  );
+  
+  // Use AI to evaluate technology integration if data is available
+  let technologyIntegration = 50; // Default score
+  
+  if (facilities.technologyData) {
+    // Try to get ML-based technology evaluation
+    try {
+      // This would be async, but we're in a sync function, so we use a placeholder
+      // In a real implementation, this would be refactored to support async
+      technologyIntegration = evaluateTechnologyIntegration(facilities.technologyData);
+    } catch (error) {
+      logger.error('Error evaluating technology integration', { error: error.message });
+    }
+  } else {
+    // Use basic calculation if no technology data available
+    technologyIntegration = calculateTechnologyIntegrationScore(
+      facilities.analyticsInvestment,
+      facilities.videoTechnology,
+      facilities.playerTrackingSystems
+    );
+  }
+  
+  // Calculate weighted score
+  const weightedScore = (
+    (practiceFacility * weights.practiceFacility) +
+    (arenaQuality * weights.arenaQuality) +
+    (technologyIntegration * weights.technologyIntegration)
+  );
+  
+  return weightedScore;
+}
+
+/**
+ * Synchronous evaluation of technology integration based on available data
+ * @param {Object} technologyData - Technology data
+ * @returns {Number} - Technology score (0-100)
+ */
+function evaluateTechnologyIntegration(technologyData) {
+  // This is a synchronous placeholder for the async AI-based evaluation
+  // In production, this would be refactored to properly support the async calls
+  
+  // Basic scoring based on available data
+  let score = 50; // Default middle score
+  
+  // Evaluate analytics capabilities (0-30 points)
+  let analyticsScore = 0;
+  if (technologyData.hasAdvancedAnalytics) analyticsScore += 10;
+  if (technologyData.hasPlayerTracking) analyticsScore += 10;
+  if (technologyData.hasPredictiveModels) analyticsScore += 10;
+  
+  // Evaluate AI/ML adoption (0-40 points)
+  let aiMlScore = 0;
+  if (technologyData.hasAiScouting) aiMlScore += 10;
+  if (technologyData.hasAiGamePlanning) aiMlScore += 10;
+  if (technologyData.hasAiPlayerDevelopment) aiMlScore += 10;
+  if (technologyData.hasAiRecruitingTools) aiMlScore += 10;
+  
+  // Evaluate innovation factor (0-30 points)
+  let innovationScore = 0;
+  if (technologyData.techBudgetPercentage > 10) innovationScore += 15;
+  if (technologyData.dedicatedTechStaff > 2) innovationScore += 15;
+  
+  score = analyticsScore + aiMlScore + innovationScore;
+  
+  return score;
+}
+
+/**
+ * Calculate Program Support (5% of total)
+ * @param {Object} support - Program support data
+ * @returns {Number} Subcomponent score (0-100)
+ */
+function calculateProgramSupport(support = {}) {
+  // Define weights within this subcomponent
+  const weights = {
+    nilCollective: 0.40,        // 2% of total (2/5 of this component)
+    financialCommitment: 0.40,  // 2% of total
+    medicalStaffQuality: 0.20   // 1% of total
+  };
+  
+  // Calculate metrics or use defaults if data not available
+  const nilCollective = calculateNilCollectiveScore(
+    support.nilBudget,
+    support.nilDeals,
+    support.nilStructure
+  );
+  
+  const financialCommitment = calculateFinancialCommitmentScore(
+    support.basketballBudget,
+    support.budgetRank,
+    support.budgetTrend
+  );
+  
+  const medicalStaffQuality = calculateMedicalStaffQualityScore(
+    support.medicalStaffSize,
+    support.specializedProfessionals,
+    support.injuryRate
+  );
+  
+  // Calculate weighted score
+  const weightedScore = (
+    (nilCollective * weights.nilCollective) +
+    (financialCommitment * weights.financialCommitment) +
+    (medicalStaffQuality * weights.medicalStaffQuality)
+  );
+  
+  return weightedScore;
 }
 
 /**
@@ -957,4 +1198,60 @@ function calculateComponentAverages(programs) {
   });
   
   return averages;
-} 
+}
+
+/**
+ * Store COMPASS evaluation for continuous learning
+ * @param {Object} compassEvaluation - COMPASS evaluation results
+ * @param {Object} actualOutcomes - Actual season outcomes for the program
+ * @returns {Promise<boolean>} Success indicator
+ */
+exports.storeEvaluationForLearning = async (compassEvaluation, actualOutcomes) => {
+  logger.info(`Storing COMPASS evaluation for learning: ${compassEvaluation.programName}`);
+  
+  try {
+    return await compassAI.storeEvaluationOutcomes(compassEvaluation, actualOutcomes);
+  } catch (error) {
+    logger.error('Error storing evaluation for learning', { error: error.message });
+    return false;
+  }
+};
+
+/**
+ * Analyze COMPASS prediction accuracy
+ * @param {string} season - Season to analyze
+ * @returns {Promise<Object>} Analysis results
+ */
+exports.analyzeAccuracy = async (season) => {
+  logger.info(`Analyzing COMPASS accuracy for season ${season}`);
+  
+  try {
+    return await compassAI.analyzePredictionAccuracy(season);
+  } catch (error) {
+    logger.error('Error analyzing COMPASS accuracy', { error: error.message });
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+};
+
+/**
+ * Process unstructured data (like media reports, social media) for COMPASS metrics
+ * @param {string} dataType - Type of data (e.g., 'mediaReport', 'socialMedia')
+ * @param {string} content - Raw unstructured content
+ * @returns {Promise<Object>} Processed data
+ */
+exports.processUnstructuredData = async (dataType, content) => {
+  logger.info(`Processing unstructured ${dataType} data for COMPASS`);
+  
+  try {
+    return await compassAI.processUnstructuredData(dataType, content);
+  } catch (error) {
+    logger.error('Error processing unstructured data', { error: error.message });
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}; 
