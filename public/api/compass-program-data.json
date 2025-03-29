@@ -1,0 +1,69 @@
+{
+  "name": "Iowa State",
+  "conference": "Big 12",
+  "totalScore": 83.4,
+  "ranking": {
+    "national": 12,
+    "conference": 2,
+    "trend": 3
+  },
+  "components": {
+    "onCourtPerformance": {
+      "weight": 35,
+      "score": 84,
+      "metrics": {
+        "currentSeasonAnalytics": 82,
+        "historicalPerformance": 78,
+        "gameStrategyExecution": 91
+      }
+    },
+    "rosterDynamics": {
+      "weight": 25,
+      "score": 77,
+      "metrics": {
+        "talentAcquisition": 75,
+        "playerDevelopment": 82,
+        "retentionRates": 73
+      }
+    },
+    "programInfrastructure": {
+      "weight": 20,
+      "score": 89,
+      "metrics": {
+        "coachingAssets": 92,
+        "facilitiesResources": 88,
+        "technologyIntegration": 86
+      }
+    },
+    "programPrestige": {
+      "weight": 15,
+      "score": 81,
+      "metrics": {
+        "historicalSuccess": 83,
+        "brandRecognition": 79,
+        "alumniNetwork": 82
+      }
+    },
+    "academicsCulture": {
+      "weight": 5,
+      "score": 94,
+      "metrics": {
+        "academicPerformance": 96,
+        "teamCulture": 93,
+        "communityEngagement": 92
+      }
+    }
+  },
+  "predictions": {
+    "winLoss": "22-9",
+    "tournamentSeed": 5,
+    "tournamentFinish": "Sweet 16",
+    "conferenceStanding": 2
+  },
+  "meta": {
+    "lastUpdated": "2023-11-15T08:30:00Z",
+    "version": "2.3.1",
+    "dataSource": "COMPASS AI Analytics System",
+    "confidenceLevel": 94.2
+  }
+} 

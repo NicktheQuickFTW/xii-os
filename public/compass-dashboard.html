@@ -404,6 +404,14 @@
     
     .compass-logo svg {
       flex-shrink: 0;
+      /* Add subtle pulse animation to logo */
+      animation: logoPulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes logoPulse {
+      0% { filter: drop-shadow(0 0 2px rgba(192, 192, 192, 0.1)); transform: scale(1); }
+      50% { filter: drop-shadow(0 0 5px rgba(192, 192, 192, 0.3)); transform: scale(1.03); }
+      100% { filter: drop-shadow(0 0 2px rgba(192, 192, 192, 0.1)); transform: scale(1); }
     }
     
     .compass-logo h2 {
@@ -411,6 +419,7 @@
       font-size: 1.5rem;
       font-weight: 700;
       letter-spacing: 0.1em;
+      text-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
     }
     
     /* Navigation styling */
@@ -426,6 +435,11 @@
     
     .compass-nav li {
       margin-bottom: 5px;
+      transition: transform 0.3s ease;
+    }
+    
+    .compass-nav li:hover {
+      transform: translateX(5px);
     }
     
     .compass-nav a {
@@ -435,15 +449,33 @@
       padding: 10px 15px;
       border-radius: var(--radius-md);
       transition: all var(--transition-fast);
+      position: relative;
+      z-index: 1;
     }
     
     .compass-nav li.active a {
       background-color: rgba(192, 192, 192, 0.1);
       color: var(--silver);
+      box-shadow: 0 0 15px rgba(192, 192, 192, 0.15);
+    }
+    
+    .compass-nav li.active a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: var(--radius-md);
+      z-index: -1;
+      background: linear-gradient(90deg, rgba(192,192,192,0.1) 0%, rgba(192,192,192,0.2) 50%, rgba(192,192,192,0.1) 100%);
+      background-size: 200% auto;
+      animation: gradientShift 3s linear infinite;
     }
     
     .compass-nav a:hover {
-      background-color: rgba(192, 192, 192, 0.05);
+      background-color: rgba(192, 192, 192, 0.1);
+      box-shadow: 0 0 10px rgba(192, 192, 192, 0.1);
     }
     
     /* Header styling */
@@ -452,10 +484,33 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 40px;
+      position: relative;
+    }
+    
+    .compass-header::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--silver), transparent);
     }
     
     .compass-header-title h1 {
       margin-bottom: 5px;
+      text-shadow: 0 0 15px rgba(192, 192, 192, 0.3);
+      background: linear-gradient(to right, var(--pure-white), var(--silver), var(--pure-white));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      background-size: 200% auto;
+      animation: gradientShift 6s linear infinite;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
     }
     
     .compass-header-title p {
@@ -468,9 +523,78 @@
       gap: 12px;
     }
     
+    /* Card styling with neon accents */
+    .compass-card {
+      background-color: var(--charcoal);
+      border: 1px solid var(--dark-gray);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      box-shadow: var(--shadow-md);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Glowing card effect on hover */
+    .compass-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2), 0 0 15px rgba(192, 192, 192, 0.2);
+      border-color: rgba(192, 192, 192, 0.3);
+    }
+    
+    /* Animated subtle gradient border */
+    .compass-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, 
+        rgba(192,192,192,0), 
+        rgba(192,192,192,0.1), 
+        rgba(192,192,192,0.2), 
+        rgba(192,192,192,0.1), 
+        rgba(192,192,192,0));
+      border-radius: calc(var(--radius-md) + 2px);
+      z-index: -1;
+      background-size: 400% 400%;
+      animation: gradientBorder 5s ease infinite;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    
+    @keyframes gradientBorder {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .compass-card:hover::before {
+      opacity: 1;
+    }
+    
     /* Section styling */
     .compass-section {
       margin-bottom: 40px;
+    }
+    
+    .compass-section > h2 {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 25px;
+      text-shadow: 0 0 10px rgba(192, 192, 192, 0.2);
+    }
+    
+    .compass-section > h2::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 30%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--silver), transparent);
     }
     
     /* Stats grid */
@@ -481,9 +605,42 @@
       margin-bottom: 20px;
     }
     
+    .compass-stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--silver);
+      margin-bottom: var(--space-xs);
+      text-shadow: 0 0 10px rgba(192, 192, 192, 0.3);
+      transition: text-shadow 0.3s ease, transform 0.3s ease;
+    }
+    
+    .compass-card:hover .compass-stat-value {
+      text-shadow: 0 0 20px rgba(192, 192, 192, 0.5);
+      transform: scale(1.05);
+    }
+    
     .compass-chart {
       height: 180px;
       margin-top: 10px;
+      position: relative;
+    }
+    
+    .compass-chart::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(192,192,192,0.1);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+    }
+    
+    .compass-card:hover .compass-chart::after {
+      opacity: 1;
     }
     
     .compass-trend {
@@ -493,6 +650,7 @@
     
     .trend-up {
       color: var(--silver);
+      text-shadow: 0 0 8px rgba(192, 192, 192, 0.3);
     }
     
     .trend-down {
@@ -532,6 +690,12 @@
       padding: 4px 10px;
       background-color: rgba(192, 192, 192, 0.1);
       border-radius: 12px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .compass-component:hover .component-weight {
+      background-color: rgba(192, 192, 192, 0.15);
+      box-shadow: 0 0 10px rgba(192, 192, 192, 0.2);
     }
     
     .component-score {
@@ -547,12 +711,57 @@
       background-color: var(--dark-gray);
       border-radius: 4px;
       overflow: hidden;
+      position: relative;
+    }
+    
+    .score-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, 
+        rgba(192,192,192,0.05), 
+        rgba(192,192,192,0.1), 
+        rgba(192,192,192,0.05));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .compass-component:hover .score-bar::after {
+      opacity: 1;
     }
     
     .score-fill {
       height: 100%;
       background-color: var(--silver);
       border-radius: 4px;
+      position: relative;
+    }
+    
+    .score-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 10px;
+      height: 100%;
+      background-color: rgba(255,255,255,0.3);
+      filter: blur(3px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .compass-component:hover .score-fill::after {
+      opacity: 1;
+      animation: pulsateBar 2s infinite;
+    }
+    
+    @keyframes pulsateBar {
+      0% { opacity: 0; }
+      50% { opacity: 0.6; }
+      100% { opacity: 0; }
     }
     
     .score-value {
@@ -561,25 +770,12 @@
       color: var(--silver);
       min-width: 30px;
       text-align: right;
+      transition: transform 0.3s ease, text-shadow 0.3s ease;
     }
     
-    .component-metrics {
-      margin-top: 20px;
-    }
-    
-    .metric-item {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 0.875rem;
-    }
-    
-    .metric-name {
-      color: var(--light-gray);
-    }
-    
-    .metric-value {
-      font-weight: 600;
+    .compass-component:hover .score-value {
+      transform: scale(1.1);
+      text-shadow: 0 0 5px rgba(192, 192, 192, 0.5);
     }
     
     /* Predictions */
@@ -629,6 +825,33 @@
       border-radius: var(--radius-md);
       padding: 20px;
       background-color: rgba(17, 17, 17, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .insight-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px rgba(192, 192, 192, 0.1);
+      border-color: rgba(192, 192, 192, 0.3);
+    }
+    
+    .insight-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 0%, 
+        rgba(192,192,192,0.05), 
+        transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    
+    .insight-item:hover::before {
+      opacity: 1;
     }
     
     .insight-header {
@@ -638,19 +861,147 @@
       margin-bottom: 15px;
     }
     
+    .insight-header svg {
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    
+    .insight-item:hover .insight-header svg {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 5px rgba(192, 192, 192, 0.5));
+    }
+    
     .insight-header h4 {
       margin: 0;
       color: var(--silver);
+      transition: text-shadow 0.3s ease;
     }
     
-    .insight-item p {
-      margin: 0;
-      color: var(--light-gray);
-      font-size: 0.9rem;
-      line-height: 1.5;
+    .insight-item:hover .insight-header h4 {
+      text-shadow: 0 0 8px rgba(192, 192, 192, 0.3);
     }
     
-    /* Responsive adjustments */
+    /* Buttons with neon effect */
+    .compass-button {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      z-index: 1;
+    }
+    
+    .compass-button::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, 
+        rgba(192,192,192,0), 
+        rgba(192,192,192,0.2), 
+        rgba(192,192,192,0.2), 
+        rgba(192,192,192,0));
+      border-radius: calc(var(--radius-md) + 2px);
+      z-index: -1;
+      background-size: 200% 200%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .compass-button:hover::before {
+      opacity: 1;
+      animation: gradientBorder 3s ease infinite;
+    }
+    
+    .compass-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba(192, 192, 192, 0.2);
+    }
+    
+    .compass-button--primary {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .compass-button--primary::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255,255,255,0.1), 
+        transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .compass-button--primary:hover::after {
+      left: 100%;
+    }
+    
+    /* Particle effect for main content */
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background-color: rgba(192, 192, 192, 0.2);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    
+    /* Table styling with hover effects */
+    .compass-table tbody tr {
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    
+    .compass-table tbody tr:hover {
+      transform: scale(1.01);
+      background-color: rgba(192, 192, 192, 0.03) !important;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 1;
+    }
+    
+    tr.current-program {
+      background-color: rgba(192, 192, 192, 0.05);
+      font-weight: 600;
+      position: relative;
+    }
+    
+    tr.current-program::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background-color: var(--silver);
+      box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    }
+    
+    /* Additional animations for UI elements */
+    @keyframes floatAnimation {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .floating-effect {
+      animation: floatAnimation 5s ease-in-out infinite;
+    }
+    
+    /* Media queries */
     @media (max-width: 768px) {
       .compass-header {
         flex-direction: column;
@@ -670,5 +1021,57 @@
       }
     }
   </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Ensure UI is visible even if data loading fails
+      setTimeout(function() {
+        if (!document.body.classList.contains('compass-loaded')) {
+          document.body.classList.add('compass-loaded');
+          console.log('Force-loaded UI after timeout');
+        }
+      }, 1000);
+      
+      // Create particle effect
+      createParticles();
+      
+      // Add floating effect to some cards
+      const cards = document.querySelectorAll('.compass-card');
+      cards.forEach((card, index) => {
+        if (index % 2 === 0) {
+          card.classList.add('floating-effect');
+        }
+      });
+    });
+    
+    // Create particle effect
+    function createParticles() {
+      const container = document.createElement('div');
+      container.className = 'particles-container';
+      document.body.appendChild(container);
+      
+      // Create particles
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Random position
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        
+        // Random size
+        const size = Math.random() * 2 + 1;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        
+        // Random opacity
+        particle.style.opacity = Math.random() * 0.5;
+        
+        // Animation
+        particle.style.animation = `floatAnimation ${Math.random() * 10 + 10}s linear infinite`;
+        
+        container.appendChild(particle);
+      }
+    }
+  </script>
 </body>
 </html> 
