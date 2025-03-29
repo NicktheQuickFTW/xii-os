@@ -17,6 +17,9 @@
 
   <!-- Custom JavaScript -->
   <script src="/js/compass-ui.js"></script>
+
+  <!-- Builder.io SDK -->
+  <script src="https://cdn.builder.io/js/builder-sdk.1.1.1.js"></script>
 </head>
 <body>
   <!-- Sidebar Navigation -->
@@ -1072,6 +1075,11 @@
         container.appendChild(particle);
       }
     }
+  </script>
+  <BuilderComponent model="page" entry="your-compass-dashboard" />
+  <script>
+    // Initialize Builder with your API key
+    builder.init('YOUR_API_KEY_HERE');
   </script>
 </body>
 </html> 
