@@ -9,14 +9,14 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="/js/compass-ui.css">
+  <link rel="stylesheet" href="js/compass-ui.css">
   
   <!-- Chart.js for data visualization -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
   <!-- Custom JavaScript -->
-  <script src="/js/compass-ui.js"></script>
+  <script src="js/compass-ui.js"></script>
 
   <!-- Builder.io SDK -->
   <script src="https://cdn.builder.io/js/builder-sdk.1.1.1.js"></script>
@@ -35,19 +35,80 @@
       <h2>COMPASS</h2>
     </div>
     
+    <!-- Team Selector -->
+    <div class="team-selector">
+      <div class="selected-team">
+        <div class="team-logo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Iowa_State_Cyclones_logo.svg/100px-Iowa_State_Cyclones_logo.svg.png" alt="Iowa State Cyclones" />
+        </div>
+        <div class="team-info">
+          <h3>Iowa State</h3>
+          <p>Cyclones</p>
+        </div>
+        <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="team-dropdown">
+        <div class="search-box">
+          <input type="text" placeholder="Search teams..." />
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="teams-list">
+          <div class="team-option">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Kansas_Jayhawks_logo.svg/100px-Kansas_Jayhawks_logo.svg.png" alt="Kansas Jayhawks" />
+            <span>Kansas Jayhawks</span>
+          </div>
+          <div class="team-option selected">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Iowa_State_Cyclones_logo.svg/100px-Iowa_State_Cyclones_logo.svg.png" alt="Iowa State Cyclones" />
+            <span>Iowa State Cyclones</span>
+          </div>
+          <div class="team-option">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Baylor_Bears_logo.svg/100px-Baylor_Bears_logo.svg.png" alt="Baylor Bears" />
+            <span>Baylor Bears</span>
+          </div>
+          <div class="team-option">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Texas_Tech_Athletics_logo.svg/100px-Texas_Tech_Athletics_logo.svg.png" alt="Texas Tech Red Raiders" />
+            <span>Texas Tech Red Raiders</span>
+          </div>
+          <div class="team-option">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/TCU_Horned_Frogs_logo.svg/100px-TCU_Horned_Frogs_logo.svg.png" alt="TCU Horned Frogs" />
+            <span>TCU Horned Frogs</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <nav class="compass-nav">
-      <ul>
-        <li class="active"><a href="#dashboard"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12L5 10M5 10L12 3L19 10M5 10V20C5 20.5523 5.44772 21 6 21H9M19 10L21 12M19 10V20C19 20.5523 18.5523 21 18 21H15M9 21C9.55228 21 10 20.5523 10 20V16C10 15.4477 10.4477 15 11 15H13C13.5523 15 14 15.4477 14 16V20C14 20.5523 14.4477 21 15 21M9 21H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dashboard</a></li>
-        <li><a href="#programs"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 20H22V18C22 16.3431 20.6569 15 19 15C18.0444 15 17.1931 15.4468 16.6438 16.1429M17 20H7M17 20V18C17 17.3438 16.8736 16.717 16.6438 16.1429M7 20H2V18C2 16.3431 3.34315 15 5 15C5.95561 15 6.80686 15.4468 7.35625 16.1429M7 20V18C7 17.3438 7.12642 16.717 7.35625 16.1429M7.35625 16.1429C8.0935 14.301 9.89482 13 12 13C14.1052 13 15.9065 14.301 16.6438 16.1429M15 7C15 8.65685 13.6569 10 12 10C10.3431 10 9 8.65685 9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7ZM21 10C21 11.1046 20.1046 12 19 12C17.8954 12 17 11.1046 17 10C17 8.89543 17.8954 8 19 8C20.1046 8 21 8.89543 21 10ZM7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Programs</a></li>
-        <li><a href="#performance"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 8V16M12 11V16M8 14V16M6 20H18C19.1046 20 20 19.1046 20 18V6C20 4.89543 19.1046 4 18 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Performance</a></li>
-        <li><a href="#roster"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12H15M9 16H15M17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3H12.5858C12.851 3 13.1054 3.10536 13.2929 3.29289L18.7071 8.70711C18.8946 8.89464 19 9.149 19 9.41421V19C19 20.1046 18.1046 21 17 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Roster</a></li>
-        <li><a href="#infrastructure"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 11H5M19 11C20.1046 11 21 11.8954 21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V13C3 11.8954 3.89543 11 5 11M19 11V9C19 7.89543 18.1046 7 17 7M5 11V9C5 7.89543 5.89543 7 7 7M7 7V5C7 3.89543 7.89543 3 9 3H15C16.1046 3 17 3.89543 17 5V7M7 7H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Infrastructure</a></li>
-        <li><a href="#prestige"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 3V7M3 5H7M6 17V21M4 19H8M13 3L15.2857 9.85714L21 12L15.2857 14.1429L13 21L10.7143 14.1429L5 12L10.7143 9.85714L13 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Prestige</a></li>
-        <li><a href="#academics"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 14L11.3 13.3C11.1 13.1 11 12.8 11 12.6V9M18 14V10C18 9.4 17.6 9 17 9H14M6 14V10C6 9.4 6.4 9 7 9H10M14 19H10C7.8 19 6 17.2 6 15V10C6 9.4 6.4 9 7 9H17C17.6 9 18 9.4 18 10V15C18 17.2 16.2 19 14 19ZM12 9V7C12 5.3 10.7 4 9 4H7.5C7.2 4 7 4.2 7 4.5C7 4.6 7.1 4.7 7.1 4.7C7.5 5.1 7.9 5.7 7.5 6.3C7.4 6.5 7.2 6.8 7 6.9C6.6 7.1 6.2 6.9 6 6.5C5.7 5.9 6 5.2 6.7 5.1C6.9 5 7 4.8 7 4.6C7 4.3 6.7 4 6.5 4C5.1 4 4 5.1 4 6.5C4 8.4 5.5 10 7.5 10C8.8 10 9.8 9.4 10.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Academics</a></li>
-        <li><a href="#schedule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Scheduling</a></li>
-        <li><a href="#predictions"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Predictions</a></li>
-        <li><a href="#settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.3246 4.31731C10.751 2.5609 13.249 2.5609 13.6754 4.31731C13.9508 5.45193 15.2507 5.99038 16.2478 5.38285C17.7913 4.44239 19.5576 6.2087 18.6172 7.75218C18.0096 8.74925 18.5481 10.0492 19.6827 10.3246C21.4391 10.751 21.4391 13.249 19.6827 13.6754C18.5481 13.9508 18.0096 15.2507 18.6172 16.2478C19.5576 17.7913 17.7913 19.5576 16.2478 18.6172C15.2507 18.0096 13.9508 18.5481 13.6754 19.6827C13.249 21.4391 10.751 21.4391 10.3246 19.6827C10.0492 18.5481 8.74926 18.0096 7.75219 18.6172C6.2087 19.5576 4.44239 17.7913 5.38285 16.2478C5.99038 15.2507 5.45193 13.9508 4.31731 13.6754C2.5609 13.249 2.5609 10.751 4.31731 10.3246C5.45193 10.0492 5.99037 8.74926 5.38285 7.75218C4.44239 6.2087 6.2087 4.44239 7.75219 5.38285C8.74926 5.99037 10.0492 5.45193 10.3246 4.31731Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Settings</a></li>
-      </ul>
+      <div class="nav-section">
+        <p class="nav-section-title">Overview</p>
+        <ul>
+          <li class="active"><a href="#dashboard"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12L5 10M5 10L12 3L19 10M5 10V20C5 20.5523 5.44772 21 6 21H9M19 10L21 12M19 10V20C19 20.5523 18.5523 21 18 21H15M9 21C9.55228 21 10 20.5523 10 20V16C10 15.4477 10.4477 15 11 15H13C13.5523 15 14 15.4477 14 16V20C14 20.5523 14.4477 21 15 21M9 21H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dashboard</a></li>
+          <li><a href="#programs"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 20H22V18C22 16.3431 20.6569 15 19 15C18.0444 15 17.1931 15.4468 16.6438 16.1429M17 20H7M17 20V18C17 17.3438 16.8736 16.717 16.6438 16.1429M7 20H2V18C2 16.3431 3.34315 15 5 15C5.95561 15 6.80686 15.4468 7.35625 16.1429M7 20V18C7 17.3438 7.12642 16.717 7.35625 16.1429M7.35625 16.1429C8.0935 14.301 9.89482 13 12 13C14.1052 13 15.9065 14.301 16.6438 16.1429M15 7C15 8.65685 13.6569 10 12 10C10.3431 10 9 8.65685 9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7ZM21 10C21 11.1046 20.1046 12 19 12C17.8954 12 17 11.1046 17 10C17 8.89543 17.8954 8 19 8C20.1046 8 21 8.89543 21 10ZM7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Program Comparison</a></li>
+          <li><a href="#predictions"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> AI Insights</a></li>
+        </ul>
+      </div>
+      
+      <div class="nav-section">
+        <p class="nav-section-title">Program Components</p>
+        <ul>
+          <li><a href="#performance"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 8V16M12 11V16M8 14V16M6 20H18C19.1046 20 20 19.1046 20 18V6C20 4.89543 19.1046 4 18 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> On-Court Performance</a></li>
+          <li><a href="#roster"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12H15M9 16H15M17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3H12.5858C12.851 3 13.1054 3.10536 13.2929 3.29289L18.7071 8.70711C18.8946 8.89464 19 9.149 19 9.41421V19C19 20.1046 18.1046 21 17 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Roster Dynamics</a></li>
+          <li><a href="#infrastructure"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 11H5M19 11C20.1046 11 21 11.8954 21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V13C3 11.8954 3.89543 11 5 11M19 11V9C19 7.89543 18.1046 7 17 7M5 11V9C5 7.89543 5.89543 7 7 7M7 7V5C7 3.89543 7.89543 3 9 3H15C16.1046 3 17 3.89543 17 5V7M7 7H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Infrastructure</a></li>
+          <li><a href="#prestige"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 3V7M3 5H7M6 17V21M4 19H8M13 3L15.2857 9.85714L21 12L15.2857 14.1429L13 21L10.7143 14.1429L5 12L10.7143 9.85714L13 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Prestige</a></li>
+          <li><a href="#academics"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 14L11.3 13.3C11.1 13.1 11 12.8 11 12.6V9M18 14V10C18 9.4 17.6 9 17 9H14M6 14V10C6 9.4 6.4 9 7 9H10M14 19H10C7.8 19 6 17.2 6 15V10C6 9.4 6.4 9 7 9H17C17.6 9 18 9.4 18 10V15C18 17.2 16.2 19 14 19ZM12 9V7C12 5.3 10.7 4 9 4H7.5C7.2 4 7 4.2 7 4.5C7 4.6 7.1 4.7 7.1 4.7C7.5 5.1 7.9 5.7 7.5 6.3C7.4 6.5 7.2 6.8 7 6.9C6.6 7.1 6.2 6.9 6 6.5C5.7 5.9 6 5.2 6.7 5.1C6.9 5 7 4.8 7 4.6C7 4.3 6.7 4 6.5 4C5.1 4 4 5.1 4 6.5C4 8.4 5.5 10 7.5 10C8.8 10 9.8 9.4 10.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Academics</a></li>
+        </ul>
+      </div>
+      
+      <div class="nav-section">
+        <p class="nav-section-title">Tools</p>
+        <ul>
+          <li><a href="#schedule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Scheduling</a></li>
+          <li><a href="#settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.3246 4.31731C10.751 2.5609 13.249 2.5609 13.6754 4.31731C13.9508 5.45193 15.2507 5.99038 16.2478 5.38285C17.7913 4.44239 19.5576 6.2087 18.6172 7.75218C18.0096 8.74925 18.5481 10.0492 19.6827 10.3246C21.4391 10.751 21.4391 13.249 19.6827 13.6754C18.5481 13.9508 18.0096 15.2507 18.6172 16.2478C19.5576 17.7913 17.7913 19.5576 16.2478 18.6172C15.2507 18.0096 13.9508 18.5481 13.6754 19.6827C13.249 21.4391 10.751 21.4391 10.3246 19.6827C10.0492 18.5481 8.74926 18.0096 7.75219 18.6172C6.2087 19.5576 4.44239 17.7913 5.38285 16.2478C5.99038 15.2507 5.45193 13.9508 4.31731 13.6754C2.5609 13.249 2.5609 10.751 4.31731 10.3246C5.45193 10.0492 5.99037 8.74926 5.38285 7.75218C4.44239 6.2087 6.2087 4.44239 7.75219 5.38285C8.74926 5.99037 10.0492 5.45193 10.3246 4.31731Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Settings</a></li>
+        </ul>
+      </div>
     </nav>
     
     <div class="compass-theme-toggle">
@@ -397,6 +458,140 @@
   
   <!-- Additional styles for components that need to be defined inline -->
   <style>
+    /* CSS Variables for Dark/Light themes */
+    :root {
+      /* Spacing */
+      --space-xs: 5px;
+      --space-sm: 10px;
+      --space-md: 15px;
+      --space-lg: 20px;
+      --space-xl: 30px;
+      
+      /* Border radius */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      
+      /* Shadows */
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+      --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.14);
+      
+      /* Transitions */
+      --transition-fast: 0.15s ease;
+      --transition-medium: 0.3s ease;
+      --transition-slow: 0.5s ease;
+      
+      /* Light Mode Colors */
+      --black: #111111;
+      --charcoal: #1A1A1A;
+      --dark-gray: #333333;
+      --mid-gray: #666666;
+      --light-gray: #AAAAAA;
+      --off-white: #EEEEEE;
+      --pure-white: #FFFFFF;
+      --silver: #505050;
+      --silver-light: #707070;
+      --silver-glow: rgba(80, 80, 80, 0.5);
+      
+      /* Functional colors for light mode */
+      --text-color: var(--black);             /* Black text */
+      --text-color-muted: var(--charcoal);    /* Dark gray text */
+      --bg-primary: var(--pure-white);        /* White background */
+      --bg-secondary: var(--off-white);       /* Light gray background */
+      --bg-tertiary: var(--light-gray);       /* Medium light background */
+      --border-color: var(--dark-gray);       /* Medium dark border */
+      --card-bg: var(--pure-white);           /* White card background */
+      --accent-color: var(--silver);          /* Silver accent */
+      --accent-glow: var(--silver-glow);
+      --success: #4caf50;
+      --warning: #ff9800;
+      --error: #f44336;
+      
+      /* Shadow with correct opacity for light mode */
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    /* Dark Mode Colors */
+    body.dark-mode {
+      /* Dark Mode Colors */
+      --pure-white: #FFFFFF;
+      --off-white: #EEEEEE;
+      --light-gray: #AAAAAA;
+      --mid-gray: #666666;
+      --dark-gray: #333333;
+      --charcoal: #1A1A1A;
+      --black: #111111;
+      --silver: #C0C0C0;
+      --silver-light: #D8D8D8;
+      --silver-glow: rgba(192, 192, 192, 0.5);
+      
+      /* Functional colors - making text white in dark mode */
+      --text-color: var(--pure-white);
+      --text-color-muted: var(--off-white);
+      --bg-primary: var(--black);
+      --bg-secondary: var(--charcoal);
+      --bg-tertiary: var(--dark-gray);
+      --border-color: var(--dark-gray);
+      --card-bg: var(--charcoal);
+      --accent-color: var(--silver);
+      --accent-glow: var(--silver-glow);
+      
+      /* Shadow with correct opacity for dark mode */
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      --hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+    }
+    
+    /* Base Styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-primary);
+      color: var(--text-color);
+      display: flex;
+      transition: background-color var(--transition-medium), color var(--transition-medium);
+      min-height: 100vh;
+      opacity: 0;
+    }
+    
+    body.compass-loaded {
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+    
+    /* Layout */
+    .compass-sidebar {
+      width: 260px;
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 10;
+      transition: background-color var(--transition-medium), border-color var(--transition-medium);
+    }
+    
+    .compass-main {
+      flex: 1;
+      margin-left: 260px;
+      padding: 30px;
+      max-width: calc(100% - 260px);
+    }
+    
+    /* Grid */
+    .compass-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    /* Add the rest of your CSS here */
+    
     /* Logo styling */
     .compass-logo {
       display: flex;
@@ -411,10 +606,16 @@
       animation: logoPulse 4s ease-in-out infinite;
     }
     
+    .compass-logo svg circle,
+    .compass-logo svg path {
+      stroke: var(--accent-color);
+      transition: stroke var(--transition-medium);
+    }
+    
     @keyframes logoPulse {
-      0% { filter: drop-shadow(0 0 2px rgba(192, 192, 192, 0.1)); transform: scale(1); }
-      50% { filter: drop-shadow(0 0 5px rgba(192, 192, 192, 0.3)); transform: scale(1.03); }
-      100% { filter: drop-shadow(0 0 2px rgba(192, 192, 192, 0.1)); transform: scale(1); }
+      0% { filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.1)); transform: scale(1); }
+      50% { filter: drop-shadow(0 0 5px var(--accent-glow)); transform: scale(1.03); }
+      100% { filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.1)); transform: scale(1); }
     }
     
     .compass-logo h2 {
@@ -422,7 +623,8 @@
       font-size: 1.5rem;
       font-weight: 700;
       letter-spacing: 0.1em;
-      text-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+      text-shadow: 0 0 10px var(--accent-glow);
+      color: var(--accent-color);
     }
     
     /* Navigation styling */
@@ -454,12 +656,27 @@
       transition: all var(--transition-fast);
       position: relative;
       z-index: 1;
+      color: var(--text-color);
+      text-decoration: none;
+    }
+    
+    .compass-nav a svg {
+      color: var(--text-color-muted);
+      transition: color var(--transition-fast);
     }
     
     .compass-nav li.active a {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--accent-color);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+    
+    .compass-nav li.active a svg {
+      color: var(--accent-color);
+    }
+    
+    body.dark-mode .compass-nav li.active a {
       background-color: rgba(192, 192, 192, 0.1);
-      color: var(--silver);
-      box-shadow: 0 0 15px rgba(192, 192, 192, 0.15);
     }
     
     .compass-nav li.active a::before {
@@ -471,14 +688,56 @@
       bottom: 0;
       border-radius: var(--radius-md);
       z-index: -1;
-      background: linear-gradient(90deg, rgba(192,192,192,0.1) 0%, rgba(192,192,192,0.2) 50%, rgba(192,192,192,0.1) 100%);
+      background: linear-gradient(90deg, 
+        rgba(80, 80, 80, 0.05),
+        rgba(80, 80, 80, 0.1), 
+        rgba(80, 80, 80, 0.05));
       background-size: 200% auto;
       animation: gradientShift 3s linear infinite;
     }
     
+    body.dark-mode .compass-nav li.active a::before {
+      background: linear-gradient(90deg, 
+        rgba(192, 192, 192, 0.1),
+        rgba(192, 192, 192, 0.2), 
+        rgba(192, 192, 192, 0.1));
+    }
+    
     .compass-nav a:hover {
+      background-color: rgba(0, 0, 0, 0.03);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    body.dark-mode .compass-nav a:hover {
       background-color: rgba(192, 192, 192, 0.1);
       box-shadow: 0 0 10px rgba(192, 192, 192, 0.1);
+    }
+    
+    /* Theme toggle */
+    .compass-theme-toggle {
+      margin-top: auto;
+      padding-top: 20px;
+    }
+    
+    #theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-color);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all var(--transition-fast);
+    }
+    
+    #theme-toggle:hover {
+      background-color: var(--accent-color);
+      color: var(--bg-primary);
     }
     
     /* Header styling */
@@ -497,13 +756,13 @@
       left: 0;
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, var(--silver), transparent);
+      background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
     }
     
     .compass-header-title h1 {
       margin-bottom: 5px;
-      text-shadow: 0 0 15px rgba(192, 192, 192, 0.3);
-      background: linear-gradient(to right, var(--pure-white), var(--silver), var(--pure-white));
+      text-shadow: 0 0 15px var(--accent-glow);
+      background: linear-gradient(to right, var(--accent-color), var(--accent-color), var(--text-color));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -517,7 +776,7 @@
     }
     
     .compass-header-title p {
-      color: var(--mid-gray);
+      color: var(--text-color-muted);
       margin: 0;
     }
     
@@ -526,15 +785,18 @@
       gap: 12px;
     }
     
-    /* Card styling with neon accents */
+    /* Card styling with accents */
     .compass-card {
-      background-color: var(--charcoal);
-      border: 1px solid var(--dark-gray);
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       padding: var(--space-lg);
       margin-bottom: var(--space-lg);
-      box-shadow: var(--shadow-md);
-      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+      box-shadow: var(--card-shadow);
+      transition: transform var(--transition-medium), 
+                 box-shadow var(--transition-medium),
+                 border-color var(--transition-medium),
+                 background-color var(--transition-medium);
       overflow: hidden;
       position: relative;
     }
@@ -542,8 +804,8 @@
     /* Glowing card effect on hover */
     .compass-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.2), 0 0 15px rgba(192, 192, 192, 0.2);
-      border-color: rgba(192, 192, 192, 0.3);
+      box-shadow: var(--hover-shadow);
+      border-color: var(--accent-color);
     }
     
     /* Animated subtle gradient border */
@@ -555,17 +817,26 @@
       right: -2px;
       bottom: -2px;
       background: linear-gradient(45deg, 
-        rgba(192,192,192,0), 
-        rgba(192,192,192,0.1), 
-        rgba(192,192,192,0.2), 
-        rgba(192,192,192,0.1), 
-        rgba(192,192,192,0));
+        rgba(80, 80, 80, 0),
+        rgba(80, 80, 80, 0.1),
+        rgba(80, 80, 80, 0.2),
+        rgba(80, 80, 80, 0.1),
+        rgba(80, 80, 80, 0));
       border-radius: calc(var(--radius-md) + 2px);
       z-index: -1;
       background-size: 400% 400%;
       animation: gradientBorder 5s ease infinite;
       opacity: 0;
       transition: opacity 0.5s ease;
+    }
+    
+    body.dark-mode .compass-card::before {
+      background: linear-gradient(45deg, 
+        rgba(192, 192, 192, 0),
+        rgba(192, 192, 192, 0.1),
+        rgba(192, 192, 192, 0.2),
+        rgba(192, 192, 192, 0.1),
+        rgba(192, 192, 192, 0));
     }
     
     @keyframes gradientBorder {
@@ -578,450 +849,67 @@
       opacity: 1;
     }
     
-    /* Section styling */
-    .compass-section {
-      margin-bottom: 40px;
-    }
-    
-    .compass-section > h2 {
-      position: relative;
-      display: inline-block;
-      margin-bottom: 25px;
-      text-shadow: 0 0 10px rgba(192, 192, 192, 0.2);
-    }
-    
-    .compass-section > h2::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -5px;
-      width: 30%;
-      height: 2px;
-      background: linear-gradient(90deg, var(--silver), transparent);
-    }
-    
-    /* Stats grid */
-    .compass-stat {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    
-    .compass-stat-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--silver);
-      margin-bottom: var(--space-xs);
-      text-shadow: 0 0 10px rgba(192, 192, 192, 0.3);
-      transition: text-shadow 0.3s ease, transform 0.3s ease;
-    }
-    
-    .compass-card:hover .compass-stat-value {
-      text-shadow: 0 0 20px rgba(192, 192, 192, 0.5);
-      transform: scale(1.05);
-    }
-    
-    .compass-chart {
-      height: 180px;
-      margin-top: 10px;
-      position: relative;
-    }
-    
-    .compass-chart::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 50%;
-      box-shadow: 0 0 30px rgba(192,192,192,0.1);
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      pointer-events: none;
-    }
-    
-    .compass-card:hover .compass-chart::after {
-      opacity: 1;
-    }
-    
-    .compass-trend {
-      text-align: center;
-      font-size: 0.875rem;
-    }
-    
-    .trend-up {
-      color: var(--silver);
-      text-shadow: 0 0 8px rgba(192, 192, 192, 0.3);
-    }
-    
-    .trend-down {
-      color: var(--error);
-    }
-    
-    .trend-unchanged {
-      color: var(--mid-gray);
-    }
-    
-    /* Component breakdown */
-    .compass-component-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 25px;
-    }
-    
-    .compass-component {
-      padding-bottom: 20px;
-    }
-    
-    .component-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* Typography within cards */
+    .compass-card h3 {
+      color: var(--text-color);
+      margin-top: 0;
       margin-bottom: 15px;
-    }
-    
-    .component-header h3 {
-      margin: 0;
-    }
-    
-    .component-weight {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--silver);
-      padding: 4px 10px;
-      background-color: rgba(192, 192, 192, 0.1);
-      border-radius: 12px;
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .compass-component:hover .component-weight {
-      background-color: rgba(192, 192, 192, 0.15);
-      box-shadow: 0 0 10px rgba(192, 192, 192, 0.2);
-    }
-    
-    .component-score {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-    
-    .score-bar {
-      flex-grow: 1;
-      height: 8px;
-      background-color: var(--dark-gray);
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
-    }
-    
-    .score-bar::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, 
-        rgba(192,192,192,0.05), 
-        rgba(192,192,192,0.1), 
-        rgba(192,192,192,0.05));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .compass-component:hover .score-bar::after {
-      opacity: 1;
-    }
-    
-    .score-fill {
-      height: 100%;
-      background-color: var(--silver);
-      border-radius: 4px;
-      position: relative;
-    }
-    
-    .score-fill::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 10px;
-      height: 100%;
-      background-color: rgba(255,255,255,0.3);
-      filter: blur(3px);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .compass-component:hover .score-fill::after {
-      opacity: 1;
-      animation: pulsateBar 2s infinite;
-    }
-    
-    @keyframes pulsateBar {
-      0% { opacity: 0; }
-      50% { opacity: 0.6; }
-      100% { opacity: 0; }
-    }
-    
-    .score-value {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: var(--silver);
-      min-width: 30px;
-      text-align: right;
-      transition: transform 0.3s ease, text-shadow 0.3s ease;
-    }
-    
-    .compass-component:hover .score-value {
-      transform: scale(1.1);
-      text-shadow: 0 0 5px rgba(192, 192, 192, 0.5);
-    }
-    
-    /* Predictions */
-    .compass-predictions {
-      padding: 10px 0;
-    }
-    
-    .prediction-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--dark-gray);
-    }
-    
-    .prediction-item:last-child {
-      border-bottom: none;
-    }
-    
-    .prediction-label {
-      color: var(--light-gray);
-    }
-    
-    .prediction-value {
-      font-weight: 600;
-      color: var(--silver);
-    }
-    
-    /* Table styling */
-    .compass-table-container {
-      overflow-x: auto;
-    }
-    
-    tr.current-program {
-      background-color: rgba(192, 192, 192, 0.05);
+      font-size: 1.1rem;
       font-weight: 600;
     }
     
-    /* Insights */
-    .compass-insights {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
+    .compass-card p {
+      color: var(--text-color-muted);
+      line-height: 1.5;
     }
     
-    .insight-item {
-      border: 1px solid var(--dark-gray);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      background-color: rgba(17, 17, 17, 0.5);
-      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .insight-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px rgba(192, 192, 192, 0.1);
-      border-color: rgba(192, 192, 192, 0.3);
-    }
-    
-    .insight-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
+    /* Table styles */
+    .compass-table {
       width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 50% 0%, 
-        rgba(192,192,192,0.05), 
-        transparent 70%);
-      opacity: 0;
-      transition: opacity 0.5s ease;
+      border-collapse: collapse;
     }
     
-    .insight-item:hover::before {
-      opacity: 1;
+    .compass-table th,
+    .compass-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
     }
     
-    .insight-header {
+    .compass-table th {
+      font-weight: 600;
+      color: var(--text-color);
+      background-color: var(--bg-secondary);
+    }
+    
+    .compass-table td {
+      color: var(--text-color);
+    }
+    
+    /* Button styles */
+    .compass-button {
+      padding: 8px 16px;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-color);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 15px;
-    }
-    
-    .insight-header svg {
-      transition: transform 0.3s ease, filter 0.3s ease;
-    }
-    
-    .insight-item:hover .insight-header svg {
-      transform: scale(1.1);
-      filter: drop-shadow(0 0 5px rgba(192, 192, 192, 0.5));
-    }
-    
-    .insight-header h4 {
-      margin: 0;
-      color: var(--silver);
-      transition: text-shadow 0.3s ease;
-    }
-    
-    .insight-item:hover .insight-header h4 {
-      text-shadow: 0 0 8px rgba(192, 192, 192, 0.3);
-    }
-    
-    /* Buttons with neon effect */
-    .compass-button {
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      z-index: 1;
-    }
-    
-    .compass-button::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      background: linear-gradient(45deg, 
-        rgba(192,192,192,0), 
-        rgba(192,192,192,0.2), 
-        rgba(192,192,192,0.2), 
-        rgba(192,192,192,0));
-      border-radius: calc(var(--radius-md) + 2px);
-      z-index: -1;
-      background-size: 200% 200%;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .compass-button:hover::before {
-      opacity: 1;
-      animation: gradientBorder 3s ease infinite;
-    }
-    
-    .compass-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 15px rgba(192, 192, 192, 0.2);
+      gap: 8px;
     }
     
     .compass-button--primary {
-      position: relative;
-      overflow: hidden;
+      background-color: var(--accent-color);
+      color: var(--bg-primary);
+      border-color: var(--accent-color);
     }
     
-    .compass-button--primary::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, 
-        transparent, 
-        rgba(255,255,255,0.1), 
-        transparent);
-      transition: left 0.5s ease;
-    }
-    
-    .compass-button--primary:hover::after {
-      left: 100%;
-    }
-    
-    /* Particle effect for main content */
-    .particles-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
-    }
-    
-    .particle {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background-color: rgba(192, 192, 192, 0.2);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    
-    /* Table styling with hover effects */
-    .compass-table tbody tr {
-      transition: transform 0.3s ease, background-color 0.3s ease;
-    }
-    
-    .compass-table tbody tr:hover {
-      transform: scale(1.01);
-      background-color: rgba(192, 192, 192, 0.03) !important;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      position: relative;
-      z-index: 1;
-    }
-    
-    tr.current-program {
-      background-color: rgba(192, 192, 192, 0.05);
-      font-weight: 600;
-      position: relative;
-    }
-    
-    tr.current-program::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 3px;
-      height: 100%;
-      background-color: var(--silver);
-      box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
-    }
-    
-    /* Additional animations for UI elements */
-    @keyframes floatAnimation {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-5px); }
-      100% { transform: translateY(0px); }
-    }
-    
-    .floating-effect {
-      animation: floatAnimation 5s ease-in-out infinite;
-    }
-    
-    /* Media queries */
-    @media (max-width: 768px) {
-      .compass-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .compass-header-title {
-        margin-bottom: 20px;
-      }
-      
-      .compass-component-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .compass-insights {
-        grid-template-columns: 1fr;
-      }
+    body.dark-mode .compass-button--primary {
+      background-color: var(--accent-color);
+      color: var(--black);
     }
   </style>
   <script>
@@ -1034,6 +922,42 @@
         }
       }, 1000);
       
+      // Set initial theme based on user preference
+      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+      if (prefersDarkScheme.matches) {
+        document.body.classList.add('dark-mode');
+      }
+      
+      // Theme toggle button
+      const themeToggle = document.getElementById('theme-toggle');
+      themeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        
+        // Update button text based on current theme
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        themeToggle.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            ${isDarkMode 
+              ? '<path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8V16Z" fill="currentColor"/><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20Z" fill="currentColor"/>'
+              : '<path d="M12 3a1 1 0 010 2a7 7 0 000 14a1 1 0 110 2a9 9 0 010-18z" fill="currentColor"/><path d="M12 5a7 7 0 107 7a1 1 0 012 0a9 9 0 11-9-9z" fill="currentColor"/>'
+            }
+          </svg>
+          ${isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        `;
+      });
+      
+      // Set initial button text based on theme
+      const isDarkMode = document.body.classList.contains('dark-mode');
+      themeToggle.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          ${isDarkMode 
+            ? '<path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8V16Z" fill="currentColor"/><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20Z" fill="currentColor"/>'
+            : '<path d="M12 3a1 1 0 010 2a7 7 0 000 14a1 1 0 110 2a9 9 0 010-18z" fill="currentColor"/><path d="M12 5a7 7 0 107 7a1 1 0 012 0a9 9 0 11-9-9z" fill="currentColor"/>'
+          }
+        </svg>
+        ${isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+      `;
+      
       // Create particle effect
       createParticles();
       
@@ -1043,6 +967,43 @@
         if (index % 2 === 0) {
           card.classList.add('floating-effect');
         }
+      });
+      
+      // Team selector functionality
+      const teamSelector = document.querySelector('.team-selector');
+      const selectedTeam = document.querySelector('.selected-team');
+      
+      selectedTeam.addEventListener('click', function() {
+        teamSelector.classList.toggle('open');
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!teamSelector.contains(event.target)) {
+          teamSelector.classList.remove('open');
+        }
+      });
+      
+      // Team selection
+      const teamOptions = document.querySelectorAll('.team-option');
+      teamOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          const imgSrc = this.querySelector('img').src;
+          const teamName = this.querySelector('span').textContent.split(' ')[0];
+          const teamMascot = this.querySelector('span').textContent.split(' ')[1];
+          
+          document.querySelector('.selected-team .team-logo img').src = imgSrc;
+          document.querySelector('.selected-team .team-info h3').textContent = teamName;
+          document.querySelector('.selected-team .team-info p').textContent = teamMascot;
+          
+          teamOptions.forEach(opt => opt.classList.remove('selected'));
+          this.classList.add('selected');
+          
+          teamSelector.classList.remove('open');
+          
+          // Here you would trigger data reload for the selected team
+          console.log(`Selected team: ${teamName} ${teamMascot}`);
+        });
       });
     });
     
