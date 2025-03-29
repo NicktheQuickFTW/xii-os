@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COMPASS | Basketball Program Analytics</title>
+  
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/js/compass-ui.css">
+  
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+  <!-- Custom JavaScript -->
+  <script src="/js/compass-ui.js"></script>
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <aside class="compass-sidebar">
+    <div class="compass-logo">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="19" stroke="#C0C0C0" stroke-width="2"/>
+        <path d="M20 10V30" stroke="#C0C0C0" stroke-width="2"/>
+        <path d="M10 20H30" stroke="#C0C0C0" stroke-width="2"/>
+        <path d="M13 13L27 27" stroke="#C0C0C0" stroke-width="2"/>
+        <path d="M13 27L27 13" stroke="#C0C0C0" stroke-width="2"/>
+      </svg>
+      <h2>COMPASS</h2>
+    </div>
+    
+    <nav class="compass-nav">
+      <ul>
+        <li class="active"><a href="#dashboard"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12L5 10M5 10L12 3L19 10M5 10V20C5 20.5523 5.44772 21 6 21H9M19 10L21 12M19 10V20C19 20.5523 18.5523 21 18 21H15M9 21C9.55228 21 10 20.5523 10 20V16C10 15.4477 10.4477 15 11 15H13C13.5523 15 14 15.4477 14 16V20C14 20.5523 14.4477 21 15 21M9 21H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Dashboard</a></li>
+        <li><a href="#programs"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 20H22V18C22 16.3431 20.6569 15 19 15C18.0444 15 17.1931 15.4468 16.6438 16.1429M17 20H7M17 20V18C17 17.3438 16.8736 16.717 16.6438 16.1429M7 20H2V18C2 16.3431 3.34315 15 5 15C5.95561 15 6.80686 15.4468 7.35625 16.1429M7 20V18C7 17.3438 7.12642 16.717 7.35625 16.1429M7.35625 16.1429C8.0935 14.301 9.89482 13 12 13C14.1052 13 15.9065 14.301 16.6438 16.1429M15 7C15 8.65685 13.6569 10 12 10C10.3431 10 9 8.65685 9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7ZM21 10C21 11.1046 20.1046 12 19 12C17.8954 12 17 11.1046 17 10C17 8.89543 17.8954 8 19 8C20.1046 8 21 8.89543 21 10ZM7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Programs</a></li>
+        <li><a href="#performance"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 8V16M12 11V16M8 14V16M6 20H18C19.1046 20 20 19.1046 20 18V6C20 4.89543 19.1046 4 18 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Performance</a></li>
+        <li><a href="#roster"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12H15M9 16H15M17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3H12.5858C12.851 3 13.1054 3.10536 13.2929 3.29289L18.7071 8.70711C18.8946 8.89464 19 9.149 19 9.41421V19C19 20.1046 18.1046 21 17 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Roster</a></li>
+        <li><a href="#infrastructure"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 11H5M19 11C20.1046 11 21 11.8954 21 13V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V13C3 11.8954 3.89543 11 5 11M19 11V9C19 7.89543 18.1046 7 17 7M5 11V9C5 7.89543 5.89543 7 7 7M7 7V5C7 3.89543 7.89543 3 9 3H15C16.1046 3 17 3.89543 17 5V7M7 7H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Infrastructure</a></li>
+        <li><a href="#prestige"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 3V7M3 5H7M6 17V21M4 19H8M13 3L15.2857 9.85714L21 12L15.2857 14.1429L13 21L10.7143 14.1429L5 12L10.7143 9.85714L13 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Prestige</a></li>
+        <li><a href="#academics"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 14L11.3 13.3C11.1 13.1 11 12.8 11 12.6V9M18 14V10C18 9.4 17.6 9 17 9H14M6 14V10C6 9.4 6.4 9 7 9H10M14 19H10C7.8 19 6 17.2 6 15V10C6 9.4 6.4 9 7 9H17C17.6 9 18 9.4 18 10V15C18 17.2 16.2 19 14 19ZM12 9V7C12 5.3 10.7 4 9 4H7.5C7.2 4 7 4.2 7 4.5C7 4.6 7.1 4.7 7.1 4.7C7.5 5.1 7.9 5.7 7.5 6.3C7.4 6.5 7.2 6.8 7 6.9C6.6 7.1 6.2 6.9 6 6.5C5.7 5.9 6 5.2 6.7 5.1C6.9 5 7 4.8 7 4.6C7 4.3 6.7 4 6.5 4C5.1 4 4 5.1 4 6.5C4 8.4 5.5 10 7.5 10C8.8 10 9.8 9.4 10.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Academics</a></li>
+        <li><a href="#schedule"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Scheduling</a></li>
+        <li><a href="#predictions"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Predictions</a></li>
+        <li><a href="#settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.3246 4.31731C10.751 2.5609 13.249 2.5609 13.6754 4.31731C13.9508 5.45193 15.2507 5.99038 16.2478 5.38285C17.7913 4.44239 19.5576 6.2087 18.6172 7.75218C18.0096 8.74925 18.5481 10.0492 19.6827 10.3246C21.4391 10.751 21.4391 13.249 19.6827 13.6754C18.5481 13.9508 18.0096 15.2507 18.6172 16.2478C19.5576 17.7913 17.7913 19.5576 16.2478 18.6172C15.2507 18.0096 13.9508 18.5481 13.6754 19.6827C13.249 21.4391 10.751 21.4391 10.3246 19.6827C10.0492 18.5481 8.74926 18.0096 7.75219 18.6172C6.2087 19.5576 4.44239 17.7913 5.38285 16.2478C5.99038 15.2507 5.45193 13.9508 4.31731 13.6754C2.5609 13.249 2.5609 10.751 4.31731 10.3246C5.45193 10.0492 5.99037 8.74926 5.38285 7.75218C4.44239 6.2087 6.2087 4.44239 7.75219 5.38285C8.74926 5.99037 10.0492 5.45193 10.3246 4.31731Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Settings</a></li>
+      </ul>
+    </nav>
+    
+    <div class="compass-theme-toggle">
+      <button id="theme-toggle" class="compass-button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8V16Z" fill="currentColor"/><path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20Z" fill="currentColor"/></svg>
+        Toggle Theme
+      </button>
+    </div>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="compass-main">
+    <header class="compass-header">
+      <div class="compass-header-title">
+        <h1>Basketball Program Analytics</h1>
+        <p>Comprehensive Organizational Metric for Program ASsessment Scorecard</p>
+      </div>
+      <div class="compass-header-actions">
+        <button class="compass-button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 6H16M8 12H16M8 18H12M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Add Note
+        </button>
+        <button class="compass-button compass-button--primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          New Evaluation
+        </button>
+      </div>
+    </header>
+    
+    <section id="dashboard" class="compass-section">
+      <h2>Program Overview</h2>
+      
+      <div class="compass-grid">
+        <div class="compass-card">
+          <h3>Total COMPASS Score</h3>
+          <div class="compass-stat">
+            <div class="compass-stat-value">83.4</div>
+            <div class="compass-stat-label">Out of 100</div>
+          </div>
+          <div class="compass-chart">
+            <canvas id="compassScoreChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="compass-card">
+          <h3>Program Ranking</h3>
+          <div class="compass-stat">
+            <div class="compass-stat-value">#12</div>
+            <div class="compass-stat-label">National</div>
+          </div>
+          <div class="compass-trend">
+            <span class="trend-up">▲ 3 from last evaluation</span>
+          </div>
+        </div>
+        
+        <div class="compass-card">
+          <h3>Conference Standing</h3>
+          <div class="compass-stat">
+            <div class="compass-stat-value">#2</div>
+            <div class="compass-stat-label">In Conference</div>
+          </div>
+          <div class="compass-trend">
+            <span class="trend-unchanged">● Unchanged from last evaluation</span>
+          </div>
+        </div>
+        
+        <div class="compass-card">
+          <h3>AI Predictions</h3>
+          <div class="compass-predictions">
+            <div class="prediction-item">
+              <div class="prediction-label">Win-Loss Ratio</div>
+              <div class="prediction-value">22-9</div>
+            </div>
+            <div class="prediction-item">
+              <div class="prediction-label">Tournament Seed</div>
+              <div class="prediction-value">5th</div>
+            </div>
+            <div class="prediction-item">
+              <div class="prediction-label">Tournament Finish</div>
+              <div class="prediction-value">Sweet 16</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="performance" class="compass-section">
+      <h2>Component Breakdown</h2>
+      
+      <div class="compass-card">
+        <div class="compass-component-grid">
+          <div class="compass-component">
+            <div class="component-header">
+              <h3>On-Court Performance</h3>
+              <div class="component-weight">35%</div>
+            </div>
+            <div class="component-score">
+              <div class="score-bar">
+                <div class="score-fill" style="width: 84%"></div>
+              </div>
+              <div class="score-value">84</div>
+            </div>
+            <div class="component-metrics">
+              <div class="metric-item">
+                <div class="metric-name">Current Season Analytics</div>
+                <div class="metric-value">82</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-name">Historical Performance</div>
+                <div class="metric-value">78</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-name">Game Strategy & Execution</div>
+                <div class="metric-value">91</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="compass-component">
+            <div class="component-header">
+              <h3>Roster Dynamics</h3>
+              <div class="component-weight">25%</div>
+            </div>
+            <div class="component-score">
+              <div class="score-bar">
+                <div class="score-fill" style="width: 77%"></div>
+              </div>
+              <div class="score-value">77</div>
+            </div>
+            <div class="component-metrics">
+              <div class="metric-item">
+                <div class="metric-name">Talent Acquisition</div>
+                <div class="metric-value">75</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-name">Player Development</div>
+                <div class="metric-value">82</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-name">Retention Rates</div>
+                <div class="metric-value">73</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="compass-component">
+            <div class="component-header">
+              <h3>Program Infrastructure</h3>
+              <div class="component-weight">20%</div>
+            </div>
+            <div class="component-score">
+              <div class="score-bar">
+                <div class="score-fill" style="width: 89%"></div>
+              </div>
+              <div class="score-value">89</div>
+            </div>
+            <div class="component-metrics">
+              <div class="metric-item">
+                <div class="metric-name">Coaching Assets</div>
+                <div class="metric-value">92</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-name">Facilities & Resources</div>
+                <div class="metric-value">88</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-name">Technology Integration</div>
+                <div class="metric-value">86</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="compass-component">
+            <div class="component-header">
+              <h3>Program Prestige</h3>
+              <div class="component-weight">15%</div>
+            </div>
+            <div class="component-score">
+              <div class="score-bar">
+                <div class="score-fill" style="width: 81%"></div>
+              </div>
+              <div class="score-value">81</div>
+            </div>
+            <div class="component-metrics">
+              <div class="metric-item">
+                <div class="metric-name">Historical Success</div>
+                <div class="metric-value">83</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-name">Brand Recognition</div>
+                <div class="metric-value">79</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-name">Alumni Network</div>
+                <div class="metric-value">82</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="compass-component">
+            <div class="component-header">
+              <h3>Academics & Culture</h3>
+              <div class="component-weight">5%</div>
+            </div>
+            <div class="component-score">
+              <div class="score-bar">
+                <div class="score-fill" style="width: 94%"></div>
+              </div>
+              <div class="score-value">94</div>
+            </div>
+            <div class="component-metrics">
+              <div class="metric-item">
+                <div class="metric-name">Academic Performance</div>
+                <div class="metric-value">96</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-name">Team Culture</div>
+                <div class="metric-value">93</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-name">Community Engagement</div>
+                <div class="metric-value">92</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="programs" class="compass-section">
+      <h2>Program Comparisons</h2>
+      
+      <div class="compass-card">
+        <div class="compass-table-container">
+          <table class="compass-table">
+            <thead>
+              <tr>
+                <th>Program</th>
+                <th>Total Score</th>
+                <th>On-Court</th>
+                <th>Roster</th>
+                <th>Infrastructure</th>
+                <th>Prestige</th>
+                <th>Academics</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Kansas</td>
+                <td>91.2</td>
+                <td>92</td>
+                <td>89</td>
+                <td>90</td>
+                <td>94</td>
+                <td>88</td>
+              </tr>
+              <tr class="current-program">
+                <td>Iowa State</td>
+                <td>83.4</td>
+                <td>84</td>
+                <td>77</td>
+                <td>89</td>
+                <td>81</td>
+                <td>94</td>
+              </tr>
+              <tr>
+                <td>Baylor</td>
+                <td>82.9</td>
+                <td>85</td>
+                <td>82</td>
+                <td>83</td>
+                <td>79</td>
+                <td>87</td>
+              </tr>
+              <tr>
+                <td>Texas Tech</td>
+                <td>79.6</td>
+                <td>81</td>
+                <td>76</td>
+                <td>82</td>
+                <td>78</td>
+                <td>86</td>
+              </tr>
+              <tr>
+                <td>TCU</td>
+                <td>76.8</td>
+                <td>79</td>
+                <td>74</td>
+                <td>77</td>
+                <td>75</td>
+                <td>84</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    
+    <section id="predictions" class="compass-section">
+      <h2>AI-Powered Insights</h2>
+      
+      <div class="compass-card">
+        <div class="compass-insights">
+          <div class="insight-item">
+            <div class="insight-header">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.5 14.5L14.5 9.5M9.5 9.5L14.5 14.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#C0C0C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <h4>Strength: Team Defense Analytics</h4>
+            </div>
+            <p>Program excels with a 94.2 defensive efficiency rating. The adoption of advanced defensive metrics and AI-powered switching protocols has contributed to a 15% improvement in opponent field goal percentage.</p>
+          </div>
+          
+          <div class="insight-item">
+            <div class="insight-header">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 9V12M12 15H12.01M5.07183 19H18.9282C20.4678 19 21.4301 17.3333 20.6603 16L13.7321 4C12.9623 2.66667 11.0378 2.66667 10.268 4L3.33978 16C2.56998 17.3333 3.53223 19 5.07183 19Z" stroke="#C0C0C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <h4>Weakness: 3-Point Shooting Consistency</h4>
+            </div>
+            <p>3-point shooting variance shows 12.3% standard deviation game-to-game, indicating inconsistency. ML models suggest focusing on developing more consistent shooting mechanics and shot selection for perimeter players.</p>
+          </div>
+          
+          <div class="insight-item">
+            <div class="insight-header">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 10V3L4 14H11V21L20 10H13Z" stroke="#C0C0C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <h4>Opportunity: Transfer Portal Strategy</h4>
+            </div>
+            <p>Based on AI analysis of transfer portal patterns, the program could improve Talent Acquisition score by 8-10% by implementing a more targeted approach to recruiting experienced guards with high efficiency ratings.</p>
+          </div>
+          
+          <div class="insight-item">
+            <div class="insight-header">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 16V12M12 8H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#C0C0C0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <h4>Threat: Conference Realignment</h4>
+            </div>
+            <p>Predictive models indicate a 68% probability of significant conference realignment within 24 months. This could impact scheduling, media contracts, and recruiting territories, requiring proactive strategic adjustments.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <!-- Additional styles for components that need to be defined inline -->
+  <style>
+    /* Logo styling */
+    .compass-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 40px;
+    }
+    
+    .compass-logo svg {
+      flex-shrink: 0;
+    }
+    
+    .compass-logo h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+    
+    /* Navigation styling */
+    .compass-nav {
+      margin-bottom: 40px;
+    }
+    
+    .compass-nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .compass-nav li {
+      margin-bottom: 5px;
+    }
+    
+    .compass-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 15px;
+      border-radius: var(--radius-md);
+      transition: all var(--transition-fast);
+    }
+    
+    .compass-nav li.active a {
+      background-color: rgba(192, 192, 192, 0.1);
+      color: var(--silver);
+    }
+    
+    .compass-nav a:hover {
+      background-color: rgba(192, 192, 192, 0.05);
+    }
+    
+    /* Header styling */
+    .compass-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    
+    .compass-header-title h1 {
+      margin-bottom: 5px;
+    }
+    
+    .compass-header-title p {
+      color: var(--mid-gray);
+      margin: 0;
+    }
+    
+    .compass-header-actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    /* Section styling */
+    .compass-section {
+      margin-bottom: 40px;
+    }
+    
+    /* Stats grid */
+    .compass-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .compass-chart {
+      height: 180px;
+      margin-top: 10px;
+    }
+    
+    .compass-trend {
+      text-align: center;
+      font-size: 0.875rem;
+    }
+    
+    .trend-up {
+      color: var(--silver);
+    }
+    
+    .trend-down {
+      color: var(--error);
+    }
+    
+    .trend-unchanged {
+      color: var(--mid-gray);
+    }
+    
+    /* Component breakdown */
+    .compass-component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+    }
+    
+    .compass-component {
+      padding-bottom: 20px;
+    }
+    
+    .component-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .component-header h3 {
+      margin: 0;
+    }
+    
+    .component-weight {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--silver);
+      padding: 4px 10px;
+      background-color: rgba(192, 192, 192, 0.1);
+      border-radius: 12px;
+    }
+    
+    .component-score {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .score-bar {
+      flex-grow: 1;
+      height: 8px;
+      background-color: var(--dark-gray);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    
+    .score-fill {
+      height: 100%;
+      background-color: var(--silver);
+      border-radius: 4px;
+    }
+    
+    .score-value {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--silver);
+      min-width: 30px;
+      text-align: right;
+    }
+    
+    .component-metrics {
+      margin-top: 20px;
+    }
+    
+    .metric-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.875rem;
+    }
+    
+    .metric-name {
+      color: var(--light-gray);
+    }
+    
+    .metric-value {
+      font-weight: 600;
+    }
+    
+    /* Predictions */
+    .compass-predictions {
+      padding: 10px 0;
+    }
+    
+    .prediction-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--dark-gray);
+    }
+    
+    .prediction-item:last-child {
+      border-bottom: none;
+    }
+    
+    .prediction-label {
+      color: var(--light-gray);
+    }
+    
+    .prediction-value {
+      font-weight: 600;
+      color: var(--silver);
+    }
+    
+    /* Table styling */
+    .compass-table-container {
+      overflow-x: auto;
+    }
+    
+    tr.current-program {
+      background-color: rgba(192, 192, 192, 0.05);
+      font-weight: 600;
+    }
+    
+    /* Insights */
+    .compass-insights {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    
+    .insight-item {
+      border: 1px solid var(--dark-gray);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      background-color: rgba(17, 17, 17, 0.5);
+    }
+    
+    .insight-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+    
+    .insight-header h4 {
+      margin: 0;
+      color: var(--silver);
+    }
+    
+    .insight-item p {
+      margin: 0;
+      color: var(--light-gray);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .compass-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .compass-header-title {
+        margin-bottom: 20px;
+      }
+      
+      .compass-component-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .compass-insights {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</body>
+</html> 

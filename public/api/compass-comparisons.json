@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Kansas",
+    "totalScore": 91.2,
+    "components": {
+      "onCourtPerformance": 92,
+      "rosterDynamics": 89,
+      "programInfrastructure": 90,
+      "programPrestige": 94,
+      "academicsCulture": 88
+    }
+  },
+  {
+    "name": "Iowa State",
+    "totalScore": 83.4,
+    "components": {
+      "onCourtPerformance": 84,
+      "rosterDynamics": 77,
+      "programInfrastructure": 89,
+      "programPrestige": 81,
+      "academicsCulture": 94
+    },
+    "isCurrent": true
+  },
+  {
+    "name": "Baylor",
+    "totalScore": 82.9,
+    "components": {
+      "onCourtPerformance": 85,
+      "rosterDynamics": 82,
+      "programInfrastructure": 83,
+      "programPrestige": 79,
+      "academicsCulture": 87
+    }
+  },
+  {
+    "name": "Texas Tech",
+    "totalScore": 79.6,
+    "components": {
+      "onCourtPerformance": 81,
+      "rosterDynamics": 76,
+      "programInfrastructure": 82,
+      "programPrestige": 78,
+      "academicsCulture": 86
+    }
+  },
+  {
+    "name": "TCU",
+    "totalScore": 76.8,
+    "components": {
+      "onCourtPerformance": 79,
+      "rosterDynamics": 74,
+      "programInfrastructure": 77,
+      "programPrestige": 75,
+      "academicsCulture": 84
+    }
+  }
+] 

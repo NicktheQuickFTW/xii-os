@@ -1,0 +1,165 @@
+{
+  "program": {
+    "name": "Iowa State",
+    "conference": "Big 12",
+    "totalScore": 83.4,
+    "ranking": {
+      "national": 12,
+      "conference": 2,
+      "trend": 3
+    },
+    "components": {
+      "onCourtPerformance": {
+        "weight": 35,
+        "score": 84,
+        "metrics": {
+          "currentSeasonAnalytics": 82,
+          "historicalPerformance": 78,
+          "gameStrategyExecution": 91
+        }
+      },
+      "rosterDynamics": {
+        "weight": 25,
+        "score": 77,
+        "metrics": {
+          "talentAcquisition": 75,
+          "playerDevelopment": 82,
+          "retentionRates": 73
+        }
+      },
+      "programInfrastructure": {
+        "weight": 20,
+        "score": 89,
+        "metrics": {
+          "coachingAssets": 92,
+          "facilitiesResources": 88,
+          "technologyIntegration": 86
+        }
+      },
+      "programPrestige": {
+        "weight": 15,
+        "score": 81,
+        "metrics": {
+          "historicalSuccess": 83,
+          "brandRecognition": 79,
+          "alumniNetwork": 82
+        }
+      },
+      "academicsCulture": {
+        "weight": 5,
+        "score": 94,
+        "metrics": {
+          "academicPerformance": 96,
+          "teamCulture": 93,
+          "communityEngagement": 92
+        }
+      }
+    },
+    "predictions": {
+      "winLoss": "22-9",
+      "tournamentSeed": 5,
+      "tournamentFinish": "Sweet 16",
+      "conferenceStanding": 2
+    }
+  },
+  "comparisons": [
+    {
+      "name": "Kansas",
+      "totalScore": 91.2,
+      "components": {
+        "onCourtPerformance": 92,
+        "rosterDynamics": 89,
+        "programInfrastructure": 90,
+        "programPrestige": 94,
+        "academicsCulture": 88
+      }
+    },
+    {
+      "name": "Iowa State",
+      "totalScore": 83.4,
+      "components": {
+        "onCourtPerformance": 84,
+        "rosterDynamics": 77,
+        "programInfrastructure": 89,
+        "programPrestige": 81,
+        "academicsCulture": 94
+      },
+      "isCurrent": true
+    },
+    {
+      "name": "Baylor",
+      "totalScore": 82.9,
+      "components": {
+        "onCourtPerformance": 85,
+        "rosterDynamics": 82,
+        "programInfrastructure": 83,
+        "programPrestige": 79,
+        "academicsCulture": 87
+      }
+    },
+    {
+      "name": "Texas Tech",
+      "totalScore": 79.6,
+      "components": {
+        "onCourtPerformance": 81,
+        "rosterDynamics": 76,
+        "programInfrastructure": 82,
+        "programPrestige": 78,
+        "academicsCulture": 86
+      }
+    },
+    {
+      "name": "TCU",
+      "totalScore": 76.8,
+      "components": {
+        "onCourtPerformance": 79,
+        "rosterDynamics": 74,
+        "programInfrastructure": 77,
+        "programPrestige": 75,
+        "academicsCulture": 84
+      }
+    }
+  ],
+  "insights": [
+    {
+      "type": "strength",
+      "title": "Team Defense Analytics",
+      "description": "Program excels with a 94.2 defensive efficiency rating. The adoption of advanced defensive metrics and AI-powered switching protocols has contributed to a 15% improvement in opponent field goal percentage."
+    },
+    {
+      "type": "weakness",
+      "title": "3-Point Shooting Consistency",
+      "description": "3-point shooting variance shows 12.3% standard deviation game-to-game, indicating inconsistency. ML models suggest focusing on developing more consistent shooting mechanics and shot selection for perimeter players."
+    },
+    {
+      "type": "opportunity",
+      "title": "Transfer Portal Strategy",
+      "description": "Based on AI analysis of transfer portal patterns, the program could improve Talent Acquisition score by 8-10% by implementing a more targeted approach to recruiting experienced guards with high efficiency ratings."
+    },
+    {
+      "type": "threat",
+      "title": "Conference Realignment",
+      "description": "Predictive models indicate a 68% probability of significant conference realignment within 24 months. This could impact scheduling, media contracts, and recruiting territories, requiring proactive strategic adjustments."
+    }
+  ],
+  "historicalData": {
+    "compassScores": [
+      {"year": 2020, "score": 75.3},
+      {"year": 2021, "score": 78.1},
+      {"year": 2022, "score": 80.5},
+      {"year": 2023, "score": 83.4}
+    ],
+    "tournamentResults": [
+      {"year": 2020, "result": "Round of 32"},
+      {"year": 2021, "result": "Sweet 16"},
+      {"year": 2022, "result": "Elite Eight"},
+      {"year": 2023, "result": "Sweet 16"}
+    ]
+  },
+  "meta": {
+    "lastUpdated": "2023-11-15T08:30:00Z",
+    "version": "2.3.1",
+    "dataSource": "COMPASS AI Analytics System",
+    "confidenceLevel": 94.2
+  }
+} 

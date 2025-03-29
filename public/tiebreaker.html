@@ -174,6 +174,13 @@
                                     <span class="quick-team" data-target="team1" data-team="Baylor">Baylor</span>
                                     <span class="quick-team" data-target="team1" data-team="Arizona State">Arizona State</span>
                                     <span class="quick-team" data-target="team1" data-team="Arizona">Arizona</span>
+                                    <span class="quick-team" data-target="team1" data-team="BYU">BYU</span>
+                                    <span class="quick-team" data-target="team1" data-team="Kansas">Kansas</span>
+                                    <span class="quick-team" data-target="team1" data-team="Kansas State">Kansas State</span>
+                                    <span class="quick-team" data-target="team1" data-team="Iowa State">Iowa State</span>
+                                    <span class="quick-team" data-target="team1" data-team="Cincinnati">Cincinnati</span>
+                                    <span class="quick-team" data-target="team1" data-team="West Virginia">West Virginia</span>
+                                    <span class="quick-team" data-target="team1" data-team="Colorado">Colorado</span>
                                 </div>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="team1" placeholder="Team name">
@@ -190,6 +197,13 @@
                                     <span class="quick-team" data-target="team2" data-team="Baylor">Baylor</span>
                                     <span class="quick-team" data-target="team2" data-team="Arizona State">Arizona State</span>
                                     <span class="quick-team" data-target="team2" data-team="Arizona">Arizona</span>
+                                    <span class="quick-team" data-target="team2" data-team="BYU">BYU</span>
+                                    <span class="quick-team" data-target="team2" data-team="Kansas">Kansas</span>
+                                    <span class="quick-team" data-target="team2" data-team="Kansas State">Kansas State</span>
+                                    <span class="quick-team" data-target="team2" data-team="Iowa State">Iowa State</span>
+                                    <span class="quick-team" data-target="team2" data-team="Cincinnati">Cincinnati</span>
+                                    <span class="quick-team" data-target="team2" data-team="West Virginia">West Virginia</span>
+                                    <span class="quick-team" data-target="team2" data-team="Colorado">Colorado</span>
                                 </div>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="team2" placeholder="Team name">
@@ -239,6 +253,26 @@
                                 <div class="col-6">
                                     <button class="btn btn-outline-secondary w-100 mb-2" onclick="quickAddMatch('TCU', 'Baylor', 4, 3)">
                                         TCU 4-3 Baylor
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary w-100 mb-2" onclick="quickAddMatch('Kansas', 'West Virginia', 4, 3)">
+                                        Kansas 4-3 WVU
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary w-100 mb-2" onclick="quickAddMatch('BYU', 'Iowa State', 4, 2)">
+                                        BYU 4-2 Iowa St
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary w-100 mb-2" onclick="quickAddMatch('Colorado', 'Cincinnati', 4, 3)">
+                                        Colorado 4-3 Cincy
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-outline-secondary w-100 mb-2" onclick="quickAddMatch('Arizona', 'Kansas State', 4, 1)">
+                                        Arizona 4-1 K-State
                                     </button>
                                 </div>
                             </div>
@@ -337,6 +371,7 @@
             const team2Score = parseInt(document.getElementById('team2_score').value);
             const matchDate = document.getElementById('match_date').value;
             const messageElement = document.getElementById('add-message');
+            const addButton = document.querySelector('button[onclick="addMatch()"]');
             
             // Reset message
             messageElement.innerHTML = '';
@@ -367,8 +402,10 @@
                 conference: 'Big 12'
             };
             
-            // Send to server
+            // Show loading state and disable button
             messageElement.innerHTML = '<div class="alert alert-info">Adding match...</div>';
+            addButton.disabled = true;
+            addButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Adding...';
             
             fetch('/api/matches', {
                 method: 'POST',
@@ -379,7 +416,7 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to add match');
+                    throw new Error(`Error ${response.status}: ${response.statusText || 'Failed to add match'}`);
                 }
                 return response.json();
             })
@@ -402,11 +439,17 @@
                 loadMatches();
             })
             .catch(error => {
+                console.error('Error adding match:', error);
                 messageElement.innerHTML = `
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-circle me-2"></i>${error.message}
                     </div>
                 `;
+            })
+            .finally(() => {
+                // Reset button state
+                addButton.disabled = false;
+                addButton.innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add Match';
             });
         }
         
@@ -435,7 +478,7 @@
             fetch('/api/tiebreaker/Big 12')
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Failed to load standings');
+                        throw new Error(`Error ${response.status}: ${response.statusText || 'Failed to load standings'}`);
                     }
                     return response.json();
                 })
@@ -512,9 +555,15 @@
                     updateWinsChart(data.regular_standings);
                 })
                 .catch(error => {
+                    console.error('Error loading standings:', error);
                     seedingsContainer.innerHTML = `
                         <div class="alert alert-danger">
                             <i class="fas fa-exclamation-circle me-2"></i>${error.message}
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-outline-primary" onclick="loadStandings()">
+                                <i class="fas fa-sync-alt me-2"></i>Try Again
+                            </button>
                         </div>
                     `;
                 });
@@ -597,7 +646,7 @@
             fetch('/api/matches')
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Failed to load matches');
+                        throw new Error(`Error ${response.status}: ${response.statusText || 'Failed to load matches'}`);
                     }
                     return response.json();
                 })
@@ -663,9 +712,15 @@
                     matchesContainer.innerHTML = html;
                 })
                 .catch(error => {
+                    console.error('Error loading matches:', error);
                     matchesContainer.innerHTML = `
                         <div class="alert alert-danger">
                             <i class="fas fa-exclamation-circle me-2"></i>${error.message}
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-outline-primary" onclick="loadMatches()">
+                                <i class="fas fa-sync-alt me-2"></i>Try Again
+                            </button>
                         </div>
                     `;
                 });

@@ -1,0 +1,381 @@
+/* COMPASS UI Design System
+ * A sleek, modern, monochromatic interface for the FlexTime/COMPASS application
+ * Follows high-contrast design principles with metallic silver accents
+ */
+
+:root {
+  /* Primary Palette - Monochromatic */
+  --pure-black: #000000;
+  --near-black: #0A0A0A;
+  --charcoal: #111111;
+  --dark-gray: #222222;
+  --mid-gray: #555555;
+  --silver: #C0C0C0;
+  --light-silver: #D9D9D9;
+  --light-gray: #EEEEEE;
+  --near-white: #F7F7F7;
+  --pure-white: #FFFFFF;
+  
+  /* Functional Colors */
+  --success: #2E2E2E;
+  --error: #393939;
+  --warning: #4F4F4F;
+  --info: #777777;
+  
+  /* Typography */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', Consolas, Monaco, 'Andale Mono', monospace;
+  
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  
+  /* Effects */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.05);
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-medium: 0.25s ease;
+  --transition-slow: 0.4s ease;
+  
+  /* Border Radius */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  
+  /* Z-index */
+  --z-tooltip: 10;
+  --z-modal: 100;
+  --z-sidebar: 50;
+}
+
+/* Base & Typography */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--near-black);
+  color: var(--pure-white);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: var(--space-md);
+}
+
+h1 {
+  font-size: 2.5rem;
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-size: 2rem;
+  letter-spacing: -0.0125em;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin-bottom: var(--space-md);
+}
+
+a {
+  color: var(--silver);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+a:hover {
+  color: var(--pure-white);
+}
+
+/* Layout Components */
+.compass-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--space-lg);
+}
+
+.compass-sidebar {
+  position: fixed;
+  width: 280px;
+  height: 100vh;
+  background-color: var(--near-black);
+  border-right: 1px solid var(--dark-gray);
+  padding: var(--space-lg);
+  overflow-y: auto;
+  z-index: var(--z-sidebar);
+}
+
+.compass-main {
+  margin-left: 280px;
+  padding: var(--space-xl);
+}
+
+.compass-card {
+  background-color: var(--charcoal);
+  border: 1px solid var(--dark-gray);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.compass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.compass-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+
+/* UI Components */
+.compass-button {
+  background-color: var(--near-black);
+  color: var(--silver);
+  border: 1px solid var(--silver);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-lg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.compass-button:hover {
+  background-color: var(--silver);
+  color: var(--near-black);
+}
+
+.compass-button--primary {
+  background-color: var(--silver);
+  color: var(--near-black);
+}
+
+.compass-button--primary:hover {
+  background-color: var(--light-silver);
+}
+
+.compass-input {
+  width: 100%;
+  background-color: var(--dark-gray);
+  color: var(--pure-white);
+  border: 1px solid var(--mid-gray);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  font-size: 0.875rem;
+  transition: border-color var(--transition-fast);
+}
+
+.compass-input:focus {
+  outline: none;
+  border-color: var(--silver);
+}
+
+.compass-select {
+  width: 100%;
+  background-color: var(--dark-gray);
+  color: var(--pure-white);
+  border: 1px solid var(--mid-gray);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  font-size: 0.875rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23C0C0C0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-md) center;
+  background-size: 16px;
+}
+
+.compass-select:focus {
+  outline: none;
+  border-color: var(--silver);
+}
+
+/* Tables */
+.compass-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-lg);
+}
+
+.compass-table th {
+  background-color: var(--dark-gray);
+  text-align: left;
+  padding: var(--space-md);
+  font-weight: 600;
+  border-bottom: 1px solid var(--mid-gray);
+}
+
+.compass-table td {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--dark-gray);
+}
+
+.compass-table tr:hover {
+  background-color: rgba(192, 192, 192, 0.05);
+}
+
+/* Data Visualization */
+.compass-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  background-color: var(--charcoal);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--dark-gray);
+}
+
+.compass-stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--silver);
+  margin-bottom: var(--space-xs);
+}
+
+.compass-stat-label {
+  font-size: 0.875rem;
+  color: var(--light-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn var(--transition-medium) forwards;
+}
+
+.slide-in {
+  animation: slideIn var(--transition-medium) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Loading States */
+.compass-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+}
+
+.compass-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--dark-gray);
+  border-top-color: var(--silver);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+  .compass-sidebar {
+    width: 240px;
+  }
+  
+  .compass-main {
+    margin-left: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .compass-sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition-medium);
+  }
+  
+  .compass-sidebar.active {
+    transform: translateX(0);
+  }
+  
+  .compass-main {
+    margin-left: 0;
+  }
+}
+
+/* Dark Mode (Default) */
+.compass-theme-dark {
+  --bg-primary: var(--near-black);
+  --bg-secondary: var(--charcoal);
+  --text-primary: var(--pure-white);
+  --text-secondary: var(--light-gray);
+}
+
+/* Light Mode (Optional) */
+.compass-theme-light {
+  --bg-primary: var(--pure-white);
+  --bg-secondary: var(--near-white);
+  --text-primary: var(--pure-black);
+  --text-secondary: var(--dark-gray);
+  
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.compass-theme-light .compass-card {
+  background-color: var(--bg-secondary);
+  border-color: var(--light-gray);
+}
+
+.compass-theme-light .compass-sidebar {
+  background-color: var(--bg-secondary);
+  border-color: var(--light-gray);
+}
+
+.compass-theme-light .compass-button {
+  background-color: var(--light-gray);
+  color: var(--near-black);
+  border-color: var(--mid-gray);
+}
+
+.compass-theme-light .compass-button--primary {
+  background-color: var(--mid-gray);
+  color: var(--pure-white);
+} 
