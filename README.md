@@ -88,7 +88,7 @@ API endpoints will be available at:
 ## Technology Stack
 
 - **Backend**: Node.js, Express
-- **Database**: MongoDB with Mongoose
+- **Database**: Neon Serverless
 - **Authentication**: Passport, JWT
 - **Security**: Helmet, CORS, Rate Limiting
 - **AI/ML**: TensorFlow.js
